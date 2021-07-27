@@ -1,6 +1,6 @@
 # Проект «Киноман»
 
-* Студент: [Дарья Лиферова](https://up.htmlacademy.ru/ecmascript/15/user/907179).
+* Студент: [Дарья Лиферова](https://htmlacademy.ru/profile/id907179).
 * Наставник: [Владимир Турецкий](https://htmlacademy.ru/profile/id439019).
 
 ---
