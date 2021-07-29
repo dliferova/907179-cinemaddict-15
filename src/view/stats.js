@@ -1,45 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="./css/normalize.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
-  <title>Cinemaddict</title>
-</head>
-<body>
-
-  <header class="header">
-    <h1 class="header__logo logo">Cinemaddict</h1>
-
-    <section class="header__profile profile">
-      <p class="profile__rating">Movie buff</p>
-      <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    </section>
-  </header>
-
-<main class="main">
-  <nav class="main-navigation">
-    <div class="main-navigation__items">
-      <a href="#all" class="main-navigation__item">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-      <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-      <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
-    </div>
-    <a href="#stats" class="main-navigation__additional main-navigation__additional--active">Stats</a>
-  </nav>
-
-  <section class="statistic">
-    <p class="statistic__rank">
+export const createStatisticSection = () => (
+  `<p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       <span class="statistic__rank-label">Movie buff</span>
     </p>
-
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
-
       <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
       <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
@@ -55,7 +21,6 @@
       <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
       <label for="statistic-year" class="statistic__filters-label">Year</label>
     </form>
-
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
@@ -70,21 +35,8 @@
         <p class="statistic__item-text">Sci-Fi</p>
       </li>
     </ul>
-
     <div class="statistic__chart-wrap">
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
-
-  </section>
-</main>
-
-
-<footer class="footer">
-  <section class="footer__logo logo logo--smaller">Cinemaddict</section>
-  <section class="footer__statistics">
-    <p class="footer__statistics-counter">130 291 movies inside</p>
-  </section>
-</footer>
-
-</body>
-</html>
+  </section>`
+);
