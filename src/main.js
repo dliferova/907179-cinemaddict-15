@@ -9,9 +9,13 @@ import {createButton} from './view/ordinary-button.js';
 import {showFilmDetails} from './view/popup.js';
 import {createStatisticksTemplate} from './view/footer-statistics.js';
 // import {createStatisticSection} from './view/stats.js';
+import {generateFilm} from './mock/film.js';
 
 const CARDS_COUNT = 5;
 const EXTRA_CARDS_COUNT = 2;
+const FILM_COUNT = 17;
+
+const films = new Array(FILM_COUNT).fill(null).map(generateFilm);
 
 const renderComponent = (root, template, position) => {
   root.insertAdjacentHTML(position, template);
@@ -24,26 +28,26 @@ const footerStatisticsSection = document.querySelector('.footer__statistics');
 const createOrdinaryFilmCards = () => {
   renderComponent(siteMainElement, createFilmCardContainer(), 'beforeend');
 
-  const films = document.querySelector('.films');
+  const filmElement = document.querySelector('.films');
 
-  renderComponent(films, createFilmsList(), 'beforeend');
+  renderComponent(filmElement, createFilmsList(), 'beforeend');
 
   const cardContainer = document.querySelector('.films-list__container');
-  const filmList = films.querySelector('.films-list');
+  const filmList = filmElement.querySelector('.films-list');
 
   for (let i = 0; i < CARDS_COUNT; i++) {
-    renderComponent(cardContainer, createFilmCardTemplate(), 'beforeend');
+    renderComponent(cardContainer, createFilmCardTemplate(films[i]), 'beforeend');
   }
 
   renderComponent(filmList, createButton(), 'beforeend');
 };
 
 const createExtraCardsList = (title) => {
-  const films = document.querySelector('.films');
+  const filmElement = document.querySelector('.films');
 
-  renderComponent(films, createExtraFilmsList(title), 'beforeend');
+  renderComponent(filmElement, createExtraFilmsList(title), 'beforeend');
 
-  const extraList = films.lastChild;
+  const extraList = filmElement.lastChild;
   const cardContainer = extraList.querySelector('.films-list__container');
 
   for (let i = 0; i < EXTRA_CARDS_COUNT; i++) {
