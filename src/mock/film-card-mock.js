@@ -1,6 +1,5 @@
-import {generateRandomDate, getRandomFromRange} from './utils.js';
-import {generateComment} from './comment.js';
-import dayjs from 'dayjs';
+import {generateRandomDate, getRandomFromRange} from './utils-mock.js';
+import {generateComment} from './comment-mock.js';
 
 const generateTitle = () => {
   const titles = [
@@ -49,45 +48,107 @@ const generateDescription = () => {
 };
 
 const generateRating = () => {
-  const firstNumber = getRandomFromRange(1, 9);
+  const firstNumber = getRandomFromRange(5, 9);
   const secondNumber = getRandomFromRange(0, 9);
   return `${firstNumber}.${secondNumber}`;
 };
 
-const generateYear = () => {
-  const generatedData = generateRandomDate(new Date(2018, 0, 1), new Date());
-  return dayjs(generatedData).format('YYYY');
-};
+const generateReleaseDate = () => generateRandomDate(new Date(1955, 0, 1), new Date());
 
 const generateDuration = () => {
   const hours = getRandomFromRange(1, 2);
   const minutes = getRandomFromRange(1, 59);
-  return `${hours}h ${minutes}m`;
+  return {hours, minutes};
 };
 
-const generateGenre = () => {
-  const ganres = [
-    'Comedy',
-    'Thriller',
-    'Drama',
-    'Horror',
-    'Cartoon',
-    'Musical',
-    'Western',
+const generateGenre = () => [
+  'Comedy',
+  'Thriller',
+  'Drama',
+];
+
+const generateAgeRestriction = () => {
+  const ages = [
+    '6+',
+    '12+',
+    '16+',
+    '18',
   ];
 
-  const randomIndex = getRandomFromRange(0, ganres.length - 1);
+  const randomIndex = getRandomFromRange(0, ages.length - 1);
 
-  return ganres[randomIndex];
+  return ages[randomIndex];
 };
 
-export const generateFilm = () => ({
-  poster: `/public/images/posters/${generatePoster()}`,
+const generateDirectorName = () => {
+  const names = [
+    'Anthony Mann',
+    'Sergio Leone',
+    'Ridley Scott',
+    'David Lean',
+    'Ingmar Bergman',
+    'Stanley Kubrick',
+    'David Fincher',
+  ];
+
+  const randomIndex = getRandomFromRange(0, names.length - 1);
+
+  return names[randomIndex];
+};
+
+const generateWritersName = () => {
+  const names = [
+    'Anne Wigton',
+    'Heinz Herald',
+    'Richard Weil',
+  ];
+
+  const randomIndex = getRandomFromRange(0, names.length - 1);
+
+  return names[randomIndex];
+};
+
+const generateActorsName = () => {
+  const names = [
+    'Erich von Stroheim',
+    'Mary Beth Hughes',
+    'Dan Duryea',
+  ];
+
+  const randomIndex = getRandomFromRange(0, names.length - 1);
+
+  return names[randomIndex];
+};
+
+const generateCountry = () => {
+  const countres = [
+    'USA',
+    'France',
+    'Italy',
+    'Germany',
+    'New Zealand',
+  ];
+
+  const randomIndex = getRandomFromRange(0, countres.length - 1);
+
+  return countres[randomIndex];
+};
+
+export const generateFilmCard = () => ({
+  poster: `./images/posters/${generatePoster()}`,
   title: generateTitle(),
+  ageRestriction: generateAgeRestriction(),
   rating: generateRating(),
-  year: generateYear(),
+  releaseDate: generateReleaseDate(),
   duration: generateDuration(),
-  genre: generateGenre(),
+  genres: generateGenre(),
   description: generateDescription(),
+  director: generateDirectorName(),
+  screenwriters: generateWritersName(),
+  cast: generateActorsName(),
+  country: generateCountry(),
   comments: new Array(getRandomFromRange(0,5)).fill(null).map(() => generateComment()),
+  isAddedToWatchList: Boolean(getRandomFromRange(0,1)),
+  isAlreadyWatched: Boolean(getRandomFromRange(0,1)),
+  isFavorite: Boolean(getRandomFromRange(0,1)),
 });

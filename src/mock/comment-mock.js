@@ -1,12 +1,9 @@
-import {generateRandomDate, getRandomFromRange} from './utils.js';
+import {generateRandomDate, getRandomFromRange} from './utils-mock.js';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
-const getData = () => {
-  const generatedData = generateRandomDate(new Date(2018, 0, 1), new Date());
-  return dayjs(generatedData).format('YYYY/MM/DD HH:mm');
-};
-
-const date = getData();
+const generateDate = () => generateRandomDate(new Date(2020, 0, 1), new Date());
 
 const generateCommentText = () => {
   const texts = [
@@ -36,14 +33,22 @@ const generateAuthorName = () => {
   return names[randomIndex];
 };
 
+const generateEmotion = () => {
+  const emotions = [
+    'angry.png',
+    'puke.png',
+    'sleeping.png',
+    'smile.png',
+  ];
+
+  const randomIndex = getRandomFromRange(0, emotions.length - 1);
+
+  return emotions[randomIndex];
+};
+
 export const generateComment = () => ({
-  comment: generateCommentText(),
-  emotions: {
-    smile: true,
-    sleeping: false,
-    puke: false,
-    angry: false,
-  },
+  textComment: generateCommentText(),
+  emotions: generateEmotion(),
   author: generateAuthorName(),
-  date,
+  date: generateDate(),
 });

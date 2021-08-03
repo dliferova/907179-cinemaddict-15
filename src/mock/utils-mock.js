@@ -1,4 +1,6 @@
-export const generateRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+import dayjs from 'dayjs';
+
+export const generateRandomDate = (start, end) => dayjs(new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())));
 
 export const getRandomFromRange = function (startNumber = 0, endNumber = 0) {
   if (startNumber < 0) {
