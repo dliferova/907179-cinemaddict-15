@@ -11,7 +11,8 @@ const renderComments = (comments) => {
 const renderGenres = (genres) => {
   let resultString = '';
   for (let i = 0; i < genres.length; i++) {
-    resultString = resultString + `<span class="film-details__genre">${genres[i]}</span>`;
+    const template = `<span class="film-details__genre">${genres[i]}</span>`;
+    resultString = resultString + template;
   }
   return resultString;
 };
