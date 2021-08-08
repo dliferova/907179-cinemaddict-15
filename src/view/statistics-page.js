@@ -1,4 +1,6 @@
-export const createStatisticSection = (statisticData) => {
+import {createElement} from '../utils.js';
+
+const createStatisticSection = (statisticData) => {
   const {watchedFilmsCount, totalDuration, topGenre} = statisticData;
 
   return `<p class="statistic__rank">
@@ -42,3 +44,26 @@ export const createStatisticSection = (statisticData) => {
     </div>
   </section>`;
 };
+
+export default class StatisticSection {
+  constructor(statisticData) {
+    this._statisticData = statisticData;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createStatisticSection(this._statisticData);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

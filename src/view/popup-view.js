@@ -1,4 +1,5 @@
 import {createCommentElement} from './comment-view.js';
+import {createElement} from '../utils.js';
 
 const renderComments = (comments) => {
   let resultString = '';
@@ -17,7 +18,7 @@ const renderGenres = (genres) => {
   return resultString;
 };
 
-export const showFilmDetails = (film) => {
+const showFilmDetails = (film) => {
   const {poster, title, rating, ageRestriction, director, screenwriters, cast, releaseDate, duration, country, genres, description, comments} = film;
 
   const filmDetailsPoster = () => `<div class="film-details__poster">
@@ -102,6 +103,7 @@ export const showFilmDetails = (film) => {
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
+         <!--      click close-->
         <button class="film-details__close-btn" type="button">close</button>
       </div>
       <div class="film-details__info-wrap">
@@ -138,3 +140,26 @@ export const showFilmDetails = (film) => {
   </form>
 </section>`;
 };
+
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return showFilmDetails(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
