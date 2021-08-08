@@ -1,4 +1,4 @@
-import {generateRandomDate, getRandomFromRange} from './utils-mock.js';
+import {generateRandomDate, getRandomFromRange} from '../utils.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);

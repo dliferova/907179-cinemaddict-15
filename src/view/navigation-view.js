@@ -1,4 +1,6 @@
-export const createNavigationTemplate = (filters) => {
+import {createElement} from "../utils.js";
+
+export const createSiteNavigationTemplate = (filters) => {
   const {watchlist, favorite, history} = filters;
 
   return `<nav class="main-navigation">
@@ -11,3 +13,14 @@ export const createNavigationTemplate = (filters) => {
     <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;
 };
+//
+// export default class SiteNavigation {
+//   constructor() {
+//     this._element = null;
+//   }
+//
+//   getTemplate() {
+//     return createSiteNavigationTemplate();
+//   }
+//
+// }

@@ -1,4 +1,4 @@
-import {generateRandomDate, getRandomFromRange} from './utils-mock.js';
+import {generateRandomDate, getRandomFromRange} from '../utils.js';
 import {generateComment} from './comment-mock.js';
 
 const generateTitle = () => {
