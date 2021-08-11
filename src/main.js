@@ -1,4 +1,4 @@
-import {RenderPosition, renderElement, removeElement} from './utils/render.js';
+import {RenderPosition, renderElement} from './utils/render.js';
 
 import UserProfileView from './view/user-profile.js';
 import SortView from './view/sort.js';
