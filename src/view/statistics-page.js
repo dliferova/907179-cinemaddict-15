@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createStatisticSection = (statisticData) => {
   const {watchedFilmsCount, totalDuration, topGenre} = statisticData;
@@ -45,25 +45,13 @@ const createStatisticSection = (statisticData) => {
   </section>`;
 };
 
-export default class StatisticSection {
+export default class StatisticSection extends AbstractView {
   constructor(statisticData) {
+    super();
     this._statisticData = statisticData;
-    this._element = null;
   }
 
   getTemplate() {
     return createStatisticSection(this._statisticData);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

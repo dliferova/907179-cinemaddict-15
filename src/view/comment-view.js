@@ -1,3 +1,5 @@
+import AbstractView from './abstract.js';
+
 export const createCommentElement = (comment) => {
   const {emotions, textComment, author, date} = comment;
 
@@ -15,3 +17,14 @@ export const createCommentElement = (comment) => {
     </div>
     </li>`;
 };
+
+export default class CommentView extends AbstractView {
+  constructor(comment) {
+    super();
+    this._comment = comment;
+  }
+
+  getTemplate() {
+    return createCommentElement(this._comment);
+  }
+}
