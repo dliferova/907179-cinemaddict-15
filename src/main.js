@@ -1,4 +1,4 @@
-import {renderElement, RenderPosition} from './utils.js';
+import {RenderPosition, renderElement} from './utils/render.js';
 
 import UserProfileView from './view/user-profile.js';
 import SortView from './view/sort.js';
@@ -31,7 +31,7 @@ const footerStatisticsSection = document.querySelector('.footer__statistics');
 const renderFilm = (container, film) => {
   const filmCardView = new FilmCardView(film);
 
-  renderElement(container, filmCardView.getElement(), RenderPosition.BEFOREEND);
+  renderElement(container, filmCardView, RenderPosition.BEFOREEND);
 
   const modal = new FilmDetailsView(film);
 
@@ -45,34 +45,30 @@ const renderFilm = (container, film) => {
     body.classList.toggle('hide-overflow');
   };
 
-  filmCardView.getElement().querySelector('.film-card__title').addEventListener('click', (evt) => {
-    evt.preventDefault();
+  filmCardView.setTitleClickHandler(() => {
     openFilmDetailPopup();
   });
 
-  filmCardView.getElement().querySelector('.film-card__poster').addEventListener('click', (evt) => {
-    evt.preventDefault();
+  filmCardView.setPosterClickHandler(() => {
     openFilmDetailPopup();
   });
 
-  filmCardView.getElement().querySelector('.film-card__comments').addEventListener('click', (evt) => {
-    evt.preventDefault();
+  filmCardView.setCommentsClickHandler(() => {
     openFilmDetailPopup();
   });
 
-  modal.getElement().querySelector('.film-details__close-btn').addEventListener('click', (evt) => {
-    evt.preventDefault();
+  modal.setClickHandler(() => {
     closeFilmDetailPopup();
   });
 
 };
 
 const createOrdinaryFilmCards = () => {
-  renderElement(siteMainElement, new FilmsSectionView().getElement(), RenderPosition.BEFOREEND);
+  renderElement(siteMainElement, new FilmsSectionView(), RenderPosition.BEFOREEND);
 
   const filmElement = document.querySelector('.films');
 
-  renderElement(filmElement, new FilmListView().getElement(), RenderPosition.BEFOREEND);
+  renderElement(filmElement, new FilmListView(), RenderPosition.BEFOREEND);
 
   const cardContainer = document.querySelector('.films-list__container');
   const filmList = filmElement.querySelector('.films-list');
@@ -85,10 +81,9 @@ const createOrdinaryFilmCards = () => {
     let renderFilmCount = CARDS_COUNT_PER_STEP;
 
     const showMoreButtonComponent = new ShowMoreButtonView();
-    renderElement(filmList, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+    renderElement(filmList, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    showMoreButtonComponent.getElement().addEventListener('click', (evt) => {
-      evt.preventDefault();
+    showMoreButtonComponent.setClickHandler(() => {
       filmsData.slice(renderFilmCount, renderFilmCount + CARDS_COUNT_PER_STEP)
         .forEach((film) => renderFilm(cardContainer, film));
 
@@ -104,7 +99,7 @@ const createOrdinaryFilmCards = () => {
 const createExtraCardsList = (title) => {
   const filmElement = document.querySelector('.films');
 
-  renderElement(filmElement, new FilmListExtraView(title).getElement(), RenderPosition.BEFOREEND);
+  renderElement(filmElement, new FilmListExtraView(title), RenderPosition.BEFOREEND);
 
   const extraList = filmElement.lastChild;
   const cardContainer = extraList.querySelector('.films-list__container');
@@ -114,10 +109,10 @@ const createExtraCardsList = (title) => {
   }
 };
 
-renderElement(siteHeaderElement, new UserProfileView().getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, new SiteNavigationView(filters).getElement(), RenderPosition.BEFOREEND);
-renderElement(footerStatisticsSection, new FooterStatisticView(generateStatisticData()).getElement(), RenderPosition.AFTERBEGIN);
+renderElement(siteHeaderElement, new UserProfileView(), RenderPosition.BEFOREEND);
+renderElement(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
+renderElement(siteMainElement, new SiteNavigationView(filters), RenderPosition.BEFOREEND);
+renderElement(footerStatisticsSection, new FooterStatisticView(generateStatisticData()), RenderPosition.AFTERBEGIN);
 createOrdinaryFilmCards();
 createExtraCardsList('Top rated');
 createExtraCardsList('Most commented');

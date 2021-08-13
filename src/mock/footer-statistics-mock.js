@@ -1,4 +1,4 @@
-import {getRandomFromRange} from '../utils.js';
+import {getRandomFromRange} from '../utils/common.js';
 
 const generateTotalMoviesCount = () => getRandomFromRange(1000, 10000);
 

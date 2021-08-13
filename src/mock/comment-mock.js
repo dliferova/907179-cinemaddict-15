@@ -1,4 +1,4 @@
-import {generateRandomDate, getRandomFromRange} from '../utils.js';
+import {generateRandomDate, getRandomFromRange} from '../utils/common.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
