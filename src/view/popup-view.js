@@ -145,7 +145,11 @@ export default class FilmDetails extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
     this._clickHandler = this._clickHandler.bind(this);
+    this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -161,5 +165,40 @@ export default class FilmDetails extends AbstractView {
     this._callback.click = callback;
     this.getElement().querySelector('.film-details__close-btn')
       .addEventListener('click', this._clickHandler);
+  }
+
+  // 1) В компоненте фильма и попапа добавьте методы для установки обработчиков клика для каждой кнопки.
+
+  _addToWatchListClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.addToWatchButtonClick();
+  }
+
+  setAddToWatchListClickHandler(callback) {
+    this._callback.addToWatchButtonClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this._addToWatchListClickHandler);
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedButtonCLick();
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedButtonCLick = callback;
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched')
+      .addEventListener('click', this._watchedClickHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteButtonClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteButtonClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--favorite')
+      .addEventListener('click', this._watchedClickHandler);
   }
 }

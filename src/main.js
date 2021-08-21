@@ -14,7 +14,7 @@ import FilmCardListPresenter from './presenter/film-card-list-presenter.js';
 const EXTRA_CARDS_COUNT = 2;
 const FILM_TOTAL = 17;
 
-const filmsData = new Array(FILM_TOTAL).fill(null).map(generateFilmCard);
+const filmsData = new Array(FILM_TOTAL).fill(null).map(() => generateFilmCard());
 const filters = filmToFilterMap(filmsData);
 
 const body = document.querySelector('body');

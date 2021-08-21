@@ -1,5 +1,6 @@
 import {generateRandomDate, getRandomFromRange} from '../utils/common.js';
 import {generateComment} from './comment-mock.js';
+import {nanoid} from 'nanoid';
 
 const generateTitle = () => {
   const titles = [
@@ -135,6 +136,7 @@ const generateCountry = () => {
 };
 
 export const generateFilmCard = () => ({
+  id: nanoid(),
   poster: `./images/posters/${generatePoster()}`,
   title: generateTitle(),
   ageRestriction: generateAgeRestriction(),
@@ -148,7 +150,7 @@ export const generateFilmCard = () => ({
   cast: generateActorsName(),
   country: generateCountry(),
   comments: new Array(getRandomFromRange(0,5)).fill(null).map(() => generateComment()),
-  isAddedToWatchList: Boolean(getRandomFromRange(0,1)),
-  isAlreadyWatched: Boolean(getRandomFromRange(0,1)),
-  isFavorite: Boolean(getRandomFromRange(0,1)),
+  isAddedToWatchList: false,
+  isAlreadyWatched: false,
+  isFavorite: false,
 });
