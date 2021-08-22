@@ -74,9 +74,29 @@ export default class FilmCard {
 
   _onAlreadyWatchedClick() {
     console.log(`Film ${this._film.id} onAlreadyWatched clicked!`);
+
+    this._changeData(
+      Object.assign(
+        {},
+        this._film,
+        {
+          isAlreadyWatched: !this._film.isAlreadyWatched,
+        },
+      ),
+    );
   }
 
   _onFavoriteClick() {
     console.log(`Film ${this._film.id} onFavorite clicked!`);
+
+    this._changeData(
+      Object.assign(
+        {},
+        this._film,
+        {
+          isFavorite: !this._film.isFavorite,
+        },
+      ),
+    );
   }
 }
