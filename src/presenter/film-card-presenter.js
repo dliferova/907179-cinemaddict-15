@@ -36,6 +36,12 @@ export default class FilmCard {
     this._filmCardComponent.setFavoriteClickHandler(this._onFavoriteClick);
     this._filmDetailsComponent.setClickHandler(this._closeFilmDetailPopup);
 
+    //Добавить внутри popup фильма
+    this._filmDetailsComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
+    this._filmDetailsComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
+    this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
+
+
     if (prevFilmCardComponent === null ||  prevFilmDetailsComponent === null) {
       renderElement(this._filmCardListContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;
@@ -43,6 +49,10 @@ export default class FilmCard {
 
     if (this._filmCardListContainer.contains(prevFilmCardComponent.getElement())) {
       replaceElement(prevFilmCardComponent, this._filmCardComponent);
+    }
+
+    if (this._mainContainer.contains(prevFilmDetailsComponent.getElement())) {
+      replaceElement(prevFilmDetailsComponent, this._filmDetailsComponent);
     }
 
     removeElement(prevFilmCardComponent);

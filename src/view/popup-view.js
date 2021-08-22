@@ -19,7 +19,15 @@ const renderGenres = (genres) => {
 };
 
 const showFilmDetails = (film) => {
-  const {poster, title, rating, ageRestriction, director, screenwriters, cast, releaseDate, duration, country, genres, description, comments} = film;
+  const {poster, title, rating, ageRestriction, director, screenwriters, cast, releaseDate, duration, country, genres, description, comments, isAddedToWatchList, isAlreadyWatched, isFavorite} = film;
+
+  const getControlsItemActiveClassName = (isActive) => {
+    if (isActive) {
+      return 'film-details__control-button--active';
+    } else {
+      return '';
+    }
+  };
 
   const filmDetailsPoster = () => `<div class="film-details__poster">
     <img class="film-details__poster-img" src="${poster}" alt="">
@@ -129,9 +137,9 @@ const showFilmDetails = (film) => {
       </div>
 
       <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlsItemActiveClassName(isAddedToWatchList)}" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlsItemActiveClassName(isAlreadyWatched)}" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlsItemActiveClassName(isFavorite)}" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
 
@@ -167,8 +175,6 @@ export default class FilmDetails extends AbstractView {
       .addEventListener('click', this._clickHandler);
   }
 
-  // 1) В компоненте фильма и попапа добавьте методы для установки обработчиков клика для каждой кнопки.
-
   _addToWatchListClickHandler(evt) {
     evt.preventDefault();
     this._callback.addToWatchButtonClick();
@@ -176,7 +182,7 @@ export default class FilmDetails extends AbstractView {
 
   setAddToWatchListClickHandler(callback) {
     this._callback.addToWatchButtonClick = callback;
-    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist')
+    this.getElement().querySelector('.film-details__control-button--watchlist')
       .addEventListener('click', this._addToWatchListClickHandler);
   }
 
@@ -187,7 +193,7 @@ export default class FilmDetails extends AbstractView {
 
   setWatchedClickHandler(callback) {
     this._callback.watchedButtonCLick = callback;
-    this.getElement().querySelector('.film-card__controls-item--mark-as-watched')
+    this.getElement().querySelector('.film-details__control-button--watched')
       .addEventListener('click', this._watchedClickHandler);
   }
 
@@ -198,7 +204,7 @@ export default class FilmDetails extends AbstractView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteButtonClick = callback;
-    this.getElement().querySelector('.film-card__controls-item--favorite')
-      .addEventListener('click', this._watchedClickHandler);
+    this.getElement().querySelector('.film-details__control-button--favorite')
+      .addEventListener('click', this._favoriteClickHandler);
   }
 }

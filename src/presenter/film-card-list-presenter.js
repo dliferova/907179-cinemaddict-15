@@ -6,7 +6,6 @@ import {updateItem} from '../utils/common.js';
 
 const CARDS_COUNT_PER_STEP = 5;
 
-
 export default class FilmCardList {
   constructor(filmsContainer, mainContainer, bodyContainer) {
     this._filmsContainer = filmsContainer;
