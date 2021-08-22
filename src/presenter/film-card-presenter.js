@@ -3,17 +3,19 @@ import FilmDetailsView from '../view/popup-view';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
 
 export default class FilmCard {
-  constructor(filmCardListContainer, mainContainer, bodyContainer, changeData) {
+  constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose) {
     this._filmCardListContainer = filmCardListContainer;
     this._mainContainer = mainContainer;
     this._bodyContainer = bodyContainer;
     this._changeData = changeData;
+    this._onPopupOpen = onPopupOpen;
+    this._onPopupClose = onPopupClose;
 
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
 
     this._openFilmDetailPopup = this._openFilmDetailPopup.bind(this);
-    this._closeFilmDetailPopup = this._closeFilmDetailPopup.bind(this);
+    this.closeFilmDetailPopup = this.closeFilmDetailPopup.bind(this);
     this._onAddToWatchClick = this._onAddToWatchClick.bind(this);
     this._onAlreadyWatchedClick = this._onAlreadyWatchedClick.bind(this);
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
@@ -34,9 +36,8 @@ export default class FilmCard {
     this._filmCardComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
     this._filmCardComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
     this._filmCardComponent.setFavoriteClickHandler(this._onFavoriteClick);
-    this._filmDetailsComponent.setClickHandler(this._closeFilmDetailPopup);
+    this._filmDetailsComponent.setClickHandler(this.closeFilmDetailPopup);
 
-    //Добавить внутри popup фильма
     this._filmDetailsComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
     this._filmDetailsComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
@@ -59,18 +60,18 @@ export default class FilmCard {
   }
 
   _openFilmDetailPopup() {
+    this._onPopupOpen();
     this._mainContainer.appendChild(this._filmDetailsComponent.getElement());
     this._bodyContainer.classList.toggle('hide-overflow');
   }
 
-  _closeFilmDetailPopup() {
+  closeFilmDetailPopup() {
+    this._onPopupClose();
     this._mainContainer.removeChild(this._filmDetailsComponent.getElement());
     this._bodyContainer.classList.toggle('hide-overflow');
   }
 
   _onAddToWatchClick() {
-    console.log(`Film ${this._film.id} onAddToWatchClick clicked!`);
-
     this._changeData(
       Object.assign(
         {},
@@ -83,8 +84,6 @@ export default class FilmCard {
   }
 
   _onAlreadyWatchedClick() {
-    console.log(`Film ${this._film.id} onAlreadyWatched clicked!`);
-
     this._changeData(
       Object.assign(
         {},
@@ -97,8 +96,6 @@ export default class FilmCard {
   }
 
   _onFavoriteClick() {
-    console.log(`Film ${this._film.id} onFavorite clicked!`);
-
     this._changeData(
       Object.assign(
         {},

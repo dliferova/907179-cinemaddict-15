@@ -13,6 +13,7 @@ export default class FilmCardList {
     this._bodyContainer = bodyContainer;
     this._renderedFilmCount = CARDS_COUNT_PER_STEP;
     this._filmCardPresenters = new Map();
+    this._openedPopupId = null;
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
 
@@ -47,7 +48,7 @@ export default class FilmCardList {
 
   _renderFilmCard(film) {
     const container = this._filmListComponent.getFilmsContainer();
-    const filmCardPresenter = new FilmCardPresenter(container, this._mainContainer, this._bodyContainer, this._handleFilmChange);
+    const filmCardPresenter = new FilmCardPresenter(container, this._mainContainer, this._bodyContainer, this._handleFilmChange, () => this._handleOpenPopup(film.id), () => this._handleClosePopup());
     filmCardPresenter.init(film);
     this._filmCardPresenters.set(film.id, filmCardPresenter);
   }
@@ -75,5 +76,16 @@ export default class FilmCardList {
   _handleFilmChange(updatedFilm) {
     this._films = updateItem(this._films, updatedFilm);
     this._filmCardPresenters.get(updatedFilm.id).init(updatedFilm);
+  }
+
+  _handleOpenPopup(id) {
+    if (this._openedPopupId !== null) {
+      this._filmCardPresenters.get(this._openedPopupId).closeFilmDetailPopup();
+    }
+    this._openedPopupId = id;
+  }
+
+  _handleClosePopup() {
+    this._openedPopupId = null;
   }
 }
