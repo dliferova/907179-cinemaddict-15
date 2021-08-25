@@ -1,122 +1,52 @@
 import AbstractView from './abstract.js';
 import {createCommentElement} from './comment-view.js';
+import {renderElement, addElementToTemplate, RenderPosition} from '../utils/render.js';
 
-const renderComments = (comments) => {
-  let resultString = '';
-  for (let i = 0; i < comments.length; i++) {
-    resultString = resultString + createCommentElement(comments[i]);
-  }
-  return resultString;
-};
+const EMOTIONS = [
+  'angry',
+  'puke',
+  'sleeping',
+  'smile',
+];
 
-const renderGenres = (genres) => {
-  let resultString = '';
-  for (let i = 0; i < genres.length; i++) {
-    const template = `<span class="film-details__genre">${genres[i]}</span>`;
-    resultString = resultString + template;
-  }
-  return resultString;
-};
+//Шаблон эмоций
+const createEmotionsTemplate = (emotion) => (
+  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
+    <label class="film-details__emoji-label" for="emoji-${emotion}">
+      <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
+    </label>`
+);
 
-const showFilmDetails = (film) => {
-  const {poster, title, rating, ageRestriction, director, screenwriters, cast, releaseDate, duration, country, genres, description, comments, isAddedToWatchList, isAlreadyWatched, isFavorite} = film;
-
-  const getControlsItemActiveClassName = (isActive) => {
-    if (isActive) {
-      return 'film-details__control-button--active';
-    } else {
-      return '';
+const getFilmDetailsPopupTemplate = (data) =>  {
+  const {poster, title, rating, ageRestriction, director, screenwriters, cast, releaseDate, duration, country, genres, description, comments, isAddedToWatchList, isAlreadyWatched, isFavorite, selectedCommentEmotion} = data;
+  const renderComments = (array) => {
+    let resultString = '';
+    for (let i = 0; i < array.length; i++) {
+      resultString = resultString + createCommentElement(array[i]);
     }
+    return resultString;
   };
-
-  const filmDetailsPoster = () => `<div class="film-details__poster">
-    <img class="film-details__poster-img" src="${poster}" alt="">
-    <p class="film-details__age">${ageRestriction}</p>
-  </div>`;
-
-  const filmDetailsTable = () => `<table class="film-details__table">
-    <tr class="film-details__row">
-        <td class="film-details__term">Director</td>
-        <td class="film-details__cell">${director}</td>
-    </tr>
-    <tr class="film-details__row">
-        <td class="film-details__term">Writers</td>
-        <td class="film-details__cell">${screenwriters}</td>
-    </tr>
-    <tr class="film-details__row">
-        <td class="film-details__term">Actors</td>
-        <td class="film-details__cell">${cast}</td>
-    </tr>
-    <tr class="film-details__row">
-        <td class="film-details__term">Release Date</td>
-        <td class="film-details__cell">${releaseDate.format('D MMMM YYYY')}</td>
-    </tr>
-    <tr class="film-details__row">
-        <td class="film-details__term">Runtime</td>
-        <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
-    </tr>
-    <tr class="film-details__row">
-        <td class="film-details__term">Country</td>
-        <td class="film-details__cell">${country}</td>
-    </tr>
-    <tr class="film-details__row">
-        <td class="film-details__term">Genres</td>
-        <td class="film-details__cell">
-            ${renderGenres(genres)}
-        </td>
-    </tr>
-</table>`;
-
-  const filmDetailsBottomContainer = () => `<div class="film-details__bottom-container">
-      <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-
-        <ul class="film-details__comments-list">
-          ${renderComments(comments)}
-        </ul>
-
-        <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
-
-          <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-          </label>
-
-          <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-            <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-            <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-            <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-            <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-            </label>
-          </div>
-        </div>
-      </section>
-    </div>`;
+  const renderGenres = (array) => {
+    let resultString = '';
+    for (let i = 0; i < array.length; i++) {
+      const template = `<span class="film-details__genre">${array[i]}</span>`;
+      resultString = resultString + template;
+    }
+    return resultString;
+  };
+  const renderEmotions = addElementToTemplate(EMOTIONS, createEmotionsTemplate);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
-         <!--      click close-->
         <button class="film-details__close-btn" type="button">close</button>
       </div>
       <div class="film-details__info-wrap">
-
-        ${filmDetailsPoster()}
+        <div class="film-details__poster">
+          <img class="film-details__poster-img" src="${poster}" alt="">
+          <p class="film-details__age">${ageRestriction}</p>
+        </div>
 
         <div class="film-details__info">
           <div class="film-details__info-head">
@@ -129,22 +59,69 @@ const showFilmDetails = (film) => {
               <p class="film-details__total-rating">${rating}</p>
             </div>
           </div>
-
-            ${filmDetailsTable()}
+          <table class="film-details__table">
+            <tr class="film-details__row">
+              <td class="film-details__term">Director</td>
+              <td class="film-details__cell">${director}</td>
+            </tr>
+            <tr class="film-details__row">
+              <td class="film-details__term">Writers</td>
+              <td class="film-details__cell">${screenwriters}</td>
+            </tr>
+            <tr class="film-details__row">
+              <td class="film-details__term">Actors</td>
+              <td class="film-details__cell">${cast}</td>
+            </tr>
+            <tr class="film-details__row">
+              <td class="film-details__term">Release Date</td>
+              <td class="film-details__cell">${releaseDate.format('D MMMM YYYY')}</td>
+            </tr>
+            <tr class="film-details__row">
+              <td class="film-details__term">Runtime</td>
+              <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
+            </tr>
+            <tr class="film-details__row">
+              <td class="film-details__term">Country</td>
+              <td class="film-details__cell">${country}</td>
+            </tr>
+            <tr class="film-details__row">
+              <td class="film-details__term">Genres</td>
+              <td class="film-details__cell">${renderGenres(genres)}</td>
+            </tr>
+          </table>
 
           <p class="film-details__film-description">${description}</p>
         </div>
       </div>
 
       <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlsItemActiveClassName(isAddedToWatchList)}" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlsItemActiveClassName(isAlreadyWatched)}" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlsItemActiveClassName(isFavorite)}" id="favorite" name="favorite">Add to favorites</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${isAddedToWatchList?'film-details__control-button--active':''}" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watched ${isAlreadyWatched?'film-details__control-button--active':''}" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button film-details__control-button--favorite ${isFavorite?'film-details__control-button--active':''}" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
 
-    ${filmDetailsBottomContainer()}
+    <div class="film-details__bottom-container">
+      <section class="film-details__comments-wrap">
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
+        <ul class="film-details__comments-list">
+          ${renderComments(comments)}
+        </ul>
+        <div class="film-details__new-comment">
+          <div class="film-details__add-emoji-label">
+            ${selectedCommentEmotion ? `<img src="images/emoji/${selectedCommentEmotion}.png" width="55" height="55" alt="emoji-${selectedCommentEmotion}">`: ''}
+          </div>
+          <label class="film-details__comment-label">
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+          </label>
+
+          <div class="film-details__emoji-list">
+            ${renderEmotions.join('')}
+          </div>
+        </div>
+      </section>
+    </div>
   </form>
 </section>`;
 };
@@ -152,16 +129,66 @@ const showFilmDetails = (film) => {
 export default class FilmDetails extends AbstractView {
   constructor(film) {
     super();
-    this._film = film;
+    this._data = FilmDetails.parseFilmToData(film);
 
     this._clickHandler = this._clickHandler.bind(this);
     this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._emotionsChangeHandler = this._emotionsChangeHandler.bind(this);
+    this._setInnerHandlers();
+  }
+
+  _onEmotionChange(emotion) {
+    this.updateData({
+      selectedCommentEmotion: emotion,
+    });
+  }
+
+  _emotionsChangeHandler(evt) {
+    if (evt.target.matches('input[type="radio"]')) {
+      this._onEmotionChange(evt.target.value);
+    }
+  }
+
+  updateElement() {
+    const prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandlers();
+  }
+
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+      {},
+      this._data,
+      update,
+    );
+
+    this.updateElement();
   }
 
   getTemplate() {
-    return showFilmDetails(this._film);
+    return getFilmDetailsPopupTemplate(this._data);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector('.film-details__emoji-list')
+      .addEventListener('change', this._emotionsChangeHandler);
   }
 
   _clickHandler(evt) {
@@ -206,5 +233,15 @@ export default class FilmDetails extends AbstractView {
     this._callback.favoriteButtonClick = callback;
     this.getElement().querySelector('.film-details__control-button--favorite')
       .addEventListener('click', this._favoriteClickHandler);
+  }
+
+  static parseFilmToData(film) {
+    return Object.assign(
+      {},
+      film,
+      {
+        selectedCommentEmotion: null,
+      },
+    );
   }
 }
