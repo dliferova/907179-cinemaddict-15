@@ -40,3 +40,20 @@ export const removeElement = (root) => {
   root.removeElement();
 };
 
+export const replaceElement = (oldChild, newChild) => {
+  if (oldChild instanceof Abstract) {
+    oldChild = oldChild.getElement();
+  }
+
+  if (newChild instanceof Abstract) {
+    newChild = newChild.getElement();
+  }
+
+  const parent = oldChild.parentElement;
+
+  if (parent === null || newChild === null || oldChild === null) {
+    throw new Error('Don\'t work with unexisting elements');
+  }
+
+  parent.replaceChild(newChild, oldChild);
+};
