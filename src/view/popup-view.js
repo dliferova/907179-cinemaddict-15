@@ -1,15 +1,8 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 import {createCommentElement} from './comment-view.js';
-import {renderElement, addElementToTemplate, RenderPosition} from '../utils/render.js';
+import {EMOTIONS} from '../const.js';
+import {addElementToTemplate} from '../utils/render.js';
 
-const EMOTIONS = [
-  'angry',
-  'puke',
-  'sleeping',
-  'smile',
-];
-
-//Шаблон эмоций
 const createEmotionsTemplate = (emotion) => (
   `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
     <label class="film-details__emoji-label" for="emoji-${emotion}">
@@ -126,7 +119,7 @@ const getFilmDetailsPopupTemplate = (data) =>  {
 </section>`;
 };
 
-export default class FilmDetails extends AbstractView {
+export default class FilmDetails extends SmartView {
   constructor(film) {
     super();
     this._data = FilmDetails.parseFilmToData(film);
@@ -137,44 +130,6 @@ export default class FilmDetails extends AbstractView {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emotionsChangeHandler = this._emotionsChangeHandler.bind(this);
     this._setInnerHandlers();
-  }
-
-  _onEmotionChange(emotion) {
-    this.updateData({
-      selectedCommentEmotion: emotion,
-    });
-  }
-
-  _emotionsChangeHandler(evt) {
-    if (evt.target.matches('input[type="radio"]')) {
-      this._onEmotionChange(evt.target.value);
-    }
-  }
-
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
-  }
-
-  updateData(update) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-      {},
-      this._data,
-      update,
-    );
-
-    this.updateElement();
   }
 
   getTemplate() {
@@ -233,6 +188,18 @@ export default class FilmDetails extends AbstractView {
     this._callback.favoriteButtonClick = callback;
     this.getElement().querySelector('.film-details__control-button--favorite')
       .addEventListener('click', this._favoriteClickHandler);
+  }
+
+  _onEmotionChange(emotion) {
+    this.updateData({
+      selectedCommentEmotion: emotion,
+    });
+  }
+
+  _emotionsChangeHandler(evt) {
+    if (evt.target.matches('input[type="radio"]')) {
+      this._onEmotionChange(evt.target.value);
+    }
   }
 
   static parseFilmToData(film) {
