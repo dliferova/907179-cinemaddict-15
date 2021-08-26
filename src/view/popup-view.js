@@ -1,17 +1,27 @@
 import SmartView from './smart.js';
 import {createCommentElement} from './comment-view.js';
-import {EMOTIONS} from '../const.js';
-import {addElementToTemplate} from '../utils/render.js';
 
-const createEmotionsTemplate = (emotion) => (
-  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
-    <label class="film-details__emoji-label" for="emoji-${emotion}">
-      <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
-    </label>`
-);
+const getFilmDetailsPopupTemplate = (data) => {
+  const {
+    poster,
+    title,
+    rating,
+    ageRestriction,
+    director,
+    screenwriters,
+    cast,
+    releaseDate,
+    duration,
+    country,
+    genres,
+    description,
+    comments,
+    isAddedToWatchList,
+    isAlreadyWatched,
+    isFavorite,
+    selectedCommentEmotion,
+  } = data;
 
-const getFilmDetailsPopupTemplate = (data) =>  {
-  const {poster, title, rating, ageRestriction, director, screenwriters, cast, releaseDate, duration, country, genres, description, comments, isAddedToWatchList, isAlreadyWatched, isFavorite, selectedCommentEmotion} = data;
   const renderComments = (array) => {
     let resultString = '';
     for (let i = 0; i < array.length; i++) {
@@ -27,7 +37,6 @@ const getFilmDetailsPopupTemplate = (data) =>  {
     }
     return resultString;
   };
-  const renderEmotions = addElementToTemplate(EMOTIONS, createEmotionsTemplate);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -88,9 +97,9 @@ const getFilmDetailsPopupTemplate = (data) =>  {
       </div>
 
       <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${isAddedToWatchList?'film-details__control-button--active':''}" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--watched ${isAlreadyWatched?'film-details__control-button--active':''}" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite ${isFavorite?'film-details__control-button--active':''}" id="favorite" name="favorite">Add to favorites</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${isAddedToWatchList ? 'film-details__control-button--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watched ${isAlreadyWatched ? 'film-details__control-button--active' : ''}" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button film-details__control-button--favorite ${isFavorite ? 'film-details__control-button--active' : ''}" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
 
@@ -103,14 +112,32 @@ const getFilmDetailsPopupTemplate = (data) =>  {
         </ul>
         <div class="film-details__new-comment">
           <div class="film-details__add-emoji-label">
-            ${selectedCommentEmotion ? `<img src="images/emoji/${selectedCommentEmotion}.png" width="55" height="55" alt="emoji-${selectedCommentEmotion}">`: ''}
+            ${selectedCommentEmotion ? `<img src="images/emoji/${selectedCommentEmotion}.png" width="55" height="55" alt="emoji-${selectedCommentEmotion}">` : ''}
           </div>
           <label class="film-details__comment-label">
             <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
           </label>
 
           <div class="film-details__emoji-list">
-            ${renderEmotions.join('')}
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${selectedCommentEmotion === 'smile' ? 'checked': ''}>
+              <label class="film-details__emoji-label" for="emoji-smile">
+                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+              </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${selectedCommentEmotion === 'sleeping' ? 'checked': ''}>
+              <label class="film-details__emoji-label" for="emoji-sleeping">
+                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+              </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${selectedCommentEmotion === 'puke' ? 'checked': ''}>
+              <label class="film-details__emoji-label" for="emoji-puke">
+                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+              </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${selectedCommentEmotion === 'angry' ? 'checked': ''}>
+              <label class="film-details__emoji-label" for="emoji-angry">
+                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+              </label>
           </div>
         </div>
       </section>
@@ -123,13 +150,13 @@ export default class FilmDetails extends SmartView {
   constructor(film) {
     super();
     this._data = FilmDetails.parseFilmToData(film);
-
     this._clickHandler = this._clickHandler.bind(this);
     this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emotionsChangeHandler = this._emotionsChangeHandler.bind(this);
     this._setInnerHandlers();
+    this._checkedEmotion = null;
   }
 
   getTemplate() {
@@ -137,6 +164,10 @@ export default class FilmDetails extends SmartView {
   }
 
   restoreHandlers() {
+    this.setClickHandler(this._callback.click);
+    this.setAddToWatchListClickHandler(this._callback.addToWatchButtonClick);
+    this.setWatchedClickHandler(this._callback.watchedButtonCLick);
+    this.setFavoriteClickHandler(this._callback.favoriteButtonClick);
     this._setInnerHandlers();
   }
 

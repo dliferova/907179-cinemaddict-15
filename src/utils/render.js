@@ -57,13 +57,3 @@ export const replaceElement = (oldChild, newChild) => {
 
   parent.replaceChild(newChild, oldChild);
 };
-
-export const addElementToTemplate = (elements, template) => {
-  const generatedElements = new Array;
-
-  elements.forEach((element) => {
-    generatedElements.push(template(element));
-  });
-
-  return generatedElements;
-};
