@@ -42,7 +42,6 @@ export default class FilmCard {
     this._filmDetailsComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
 
-
     if (prevFilmCardComponent === null ||  prevFilmDetailsComponent === null) {
       renderElement(this._filmCardListContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;

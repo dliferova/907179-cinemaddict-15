@@ -35,10 +35,10 @@ const generateAuthorName = () => {
 
 const generateEmotion = () => {
   const emotions = [
-    'angry.png',
-    'puke.png',
-    'sleeping.png',
-    'smile.png',
+    'angry',
+    'puke',
+    'sleeping',
+    'smile',
   ];
 
   const randomIndex = getRandomFromRange(0, emotions.length - 1);
