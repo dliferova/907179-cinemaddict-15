@@ -4,13 +4,15 @@ import ShowMoreButtonView from '../view/show-more-button.js';
 import FilmCardPresenter from './film-card-presenter.js';
 import {updateItem} from '../utils/common.js';
 
+const EXTRA_CARDS_COUNT = 2;
 const CARDS_COUNT_PER_STEP = 5;
 
 export default class FilmCardList {
-  constructor(filmsContainer, mainContainer, bodyContainer) {
+  constructor(filmsContainer, mainContainer, bodyContainer, filmsModel) {
     this._filmsContainer = filmsContainer;
     this._mainContainer = mainContainer;
     this._bodyContainer = bodyContainer;
+    this._filmsModel = filmsModel;
     this._renderedFilmCount = CARDS_COUNT_PER_STEP;
     this._filmCardPresenters = new Map();
     this._openedPopupId = null;
@@ -20,10 +22,9 @@ export default class FilmCardList {
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
-  init(title, isExtra, films) {
+  init(title, isExtra) {
     this._title = title;
     this._isExtra = isExtra;
-    this._films = films;
 
     this._filmListComponent = new FilmListView(title, isExtra);
     this._showMoreButtonComponent = new ShowMoreButtonView();
@@ -31,15 +32,23 @@ export default class FilmCardList {
     this._renderFilmList();
   }
 
+  _getFilms() {
+    if (this._isExtra) {
+      return this._filmsModel.getFilms().slice(0, EXTRA_CARDS_COUNT);
+    } else {
+      return this._filmsModel.getFilms();
+    }
+  }
+
   _renderFilmList() {
     renderElement(this._filmsContainer, this._filmListComponent, RenderPosition.BEFOREEND);
 
-    for (let i = 0; i < Math.min(this._films.length, CARDS_COUNT_PER_STEP); i++) {
-      this._renderFilmCard(this._films[i]);
+    for (let i = 0; i < Math.min(this._getFilms().length, CARDS_COUNT_PER_STEP); i++) {
+      this._renderFilmCard(this._getFilms()[i]);
     }
 
     if (!this._isExtra) {
-      if (this._films.length > CARDS_COUNT_PER_STEP) {
+      if (this._getFilms.length > CARDS_COUNT_PER_STEP) {
         this._renderedFilmCount = CARDS_COUNT_PER_STEP;
         this._renderShowMoreButton();
       }
@@ -63,18 +72,19 @@ export default class FilmCardList {
   }
 
   _handleShowMoreButtonClick() {
-    this._films.slice(this._renderedFilmCount, this._renderedFilmCount + CARDS_COUNT_PER_STEP)
+    this._getFilms().slice(this._renderedFilmCount, this._renderedFilmCount + CARDS_COUNT_PER_STEP)
       .forEach((film) => this._renderFilmCard(film));
 
     this._renderedFilmCount += CARDS_COUNT_PER_STEP;
 
-    if (this._renderedFilmCount >= this._films.length) {
+    if (this._renderedFilmCount >= this._getFilms().length) {
       this._removeShowMoreButton();
     }
   }
 
   _handleFilmChange(updatedFilm) {
-    this._films = updateItem(this._films, updatedFilm);
+    const updatedFilms = updateItem(this._getFilms(), updatedFilm);
+    this._filmsModel.setFilms(updatedFilms);
     this._filmCardPresenters.get(updatedFilm.id).init(updatedFilm);
   }
 
