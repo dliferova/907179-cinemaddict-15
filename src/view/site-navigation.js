@@ -1,26 +1,55 @@
 import AbstractView from './abstract.js';
 
-const createSiteNavigationTemplate = (filters) => {
-  const {watchlist, favorite, history} = filters;
+const createSiteNavigationItem = (filter, currentFilterType) => {
+  const {type, name, count} = filter;
+
+  if (count === null) {
+    return `<a href="#${type.toLowerCase()}"
+    class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}" data-filter-name = "${type.toLowerCase()}">${name}</a>`;
+  } else {
+    return `<a href="#${type.toLowerCase()}"
+      class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}" data-filter-name = "${type.toLowerCase()}">${name}
+      <span class="main-navigation__item-count">${count}</span>
+      </a>`;
+  }
+};
+
+const createSiteNavigationTemplate = (filterItem, currentFilterType) => {
+  const filterItemsTemplate = filterItem.map((filter) => createSiteNavigationItem(filter, currentFilterType))
+    .join('');
 
   return `<nav class="main-navigation">
     <div class="main-navigation__items">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${watchlist}</span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${history}</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${favorite}</span></a>
-    </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
+      ${filterItemsTemplate}
+      </div>
+      <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;
 };
 
-export default class SiteNavigation extends AbstractView {
-  constructor(filters) {
+export default class Filter extends AbstractView {
+  constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
+    this._currentFilter = currentFilterType;
+
+    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createSiteNavigationTemplate(this._filters);
+    return createSiteNavigationTemplate(this._filters, this._currentFilter);
+  }
+
+  _filterTypeChangeHandler(evt) {
+    if (evt.target.tagName !== 'A') {
+      return;
+    }
+
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.dataset.filterName);
+  }
+
+  setFilterChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
   }
 }

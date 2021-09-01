@@ -1,6 +1,7 @@
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/popup-view';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
+import {UpdateType, UserAction} from '../const.js';
 
 export default class FilmCard {
   constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose) {
@@ -72,6 +73,8 @@ export default class FilmCard {
 
   _onAddToWatchClick() {
     this._changeData(
+      UserAction.UPDATE_FILM_CARD,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -84,6 +87,8 @@ export default class FilmCard {
 
   _onAlreadyWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_FILM_CARD,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -96,6 +101,8 @@ export default class FilmCard {
 
   _onFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_FILM_CARD,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
