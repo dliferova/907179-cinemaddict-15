@@ -34,17 +34,5 @@ filterPresenter.init();
 
 renderElement(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
 
-const filmsSectionComponent = new FilmsSectionView();
-renderElement(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
-
-const ordinaryFilmCarListPresenter = new FilmCardListPresenter(filmsSectionComponent, siteMainElement, body, filmsModel);
-ordinaryFilmCarListPresenter.init('All movies. Upcoming', false);
-
-// TODO восстановить filmsData.slice(0, EXTRA_CARDS_COUNT)
-const topRatedFilmCarListPresenter = new FilmCardListPresenter(filmsSectionComponent, siteMainElement, body, filmsModel);
-topRatedFilmCarListPresenter.init('Top rated', true);
-
-// TODO восстановить filmsData.slice(0, EXTRA_CARDS_COUNT)
-const mostCommentedFilmCarListPresenter = new FilmCardListPresenter(filmsSectionComponent, siteMainElement, body, filmsModel);
-mostCommentedFilmCarListPresenter.init('Most commented', true);
-
+const filmCardListPresenter = new FilmCardListPresenter(siteMainElement, body, filmsModel, filterModel);
+filmCardListPresenter.init();

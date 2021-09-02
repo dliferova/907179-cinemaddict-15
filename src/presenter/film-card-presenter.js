@@ -66,6 +66,9 @@ export default class FilmCard {
   }
 
   closeFilmDetailPopup() {
+    if (!this._mainContainer.contains(this._filmDetailsComponent.getElement())) {
+      return;
+    }
     this._onPopupClose();
     this._mainContainer.removeChild(this._filmDetailsComponent.getElement());
     this._bodyContainer.classList.toggle('hide-overflow');
