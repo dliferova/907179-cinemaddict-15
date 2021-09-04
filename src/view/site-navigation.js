@@ -1,4 +1,5 @@
 import AbstractView from './abstract.js';
+import {FilterType} from "../const";
 
 const createSiteNavigationItem = (filter, currentFilterType) => {
   const {type, name, count} = filter;
@@ -9,7 +10,7 @@ const createSiteNavigationItem = (filter, currentFilterType) => {
   } else {
     return `<a href="#${type.toLowerCase()}"
       class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}" data-filter-name = "${type.toLowerCase()}">${name}
-      <span class="main-navigation__item-count">${count}</span>
+      <span class="${type === FilterType.ALL ? 'visually-hidden': 'main-navigation__item-count'}">${count}</span>
       </a>`;
   }
 };

@@ -59,6 +59,10 @@ export default class FilmCard {
     removeElement(prevFilmCardComponent);
   }
 
+  destroy() {
+    removeElement(this._filmCardComponent);
+  }
+
   _openFilmDetailPopup() {
     this._onPopupOpen();
     this._mainContainer.appendChild(this._filmDetailsComponent.getElement());
@@ -75,9 +79,10 @@ export default class FilmCard {
   }
 
   _onAddToWatchClick() {
+    const updateType = !this._film.isAddedToWatchList ? UpdateType.PATCH : UpdateType.MINOR;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
-      UpdateType.PATCH,
+      updateType,
       Object.assign(
         {},
         this._film,
@@ -89,9 +94,10 @@ export default class FilmCard {
   }
 
   _onAlreadyWatchedClick() {
+    const updateType = !this._film.isAlreadyWatched ? UpdateType.PATCH : UpdateType.MINOR;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
-      UpdateType.PATCH,
+      updateType,
       Object.assign(
         {},
         this._film,
@@ -103,9 +109,10 @@ export default class FilmCard {
   }
 
   _onFavoriteClick() {
+    const updateType = !this._film.isFavorite ? UpdateType.PATCH : UpdateType.MINOR;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
-      UpdateType.PATCH,
+      updateType,
       Object.assign(
         {},
         this._film,
