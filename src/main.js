@@ -1,8 +1,6 @@
 import {RenderPosition, renderElement} from './utils/render.js';
 
 import UserProfileView from './view/user-profile.js';
-import SortView from './view/sort.js';
-import FilmsSectionView from './view/films-section.js';
 import FooterStatisticView from './view/footer-statistics.js';
 import {generateStatisticData} from './mock/footer-statistics-mock.js';
 import {generateFilmCard} from './mock/film-card-mock.js';

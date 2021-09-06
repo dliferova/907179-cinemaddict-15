@@ -1,5 +1,5 @@
 import {generateRandomDate, getRandomFromRange} from '../utils/common.js';
-import {generateComment} from './comment-mock.js';
+import {generateComment, generateCommentText, generateEmotion} from './comment-mock.js';
 import {nanoid} from 'nanoid';
 
 const generateTitle = () => {
@@ -149,7 +149,7 @@ export const generateFilmCard = () => ({
   screenwriters: generateWritersName(),
   cast: generateActorsName(),
   country: generateCountry(),
-  comments: new Array(getRandomFromRange(0,5)).fill(null).map(() => generateComment()),
+  comments: new Array(getRandomFromRange(0,5)).fill(null).map(() => generateComment(generateCommentText(), generateEmotion())),
   isAddedToWatchList: false,
   isAlreadyWatched: false,
   isFavorite: false,

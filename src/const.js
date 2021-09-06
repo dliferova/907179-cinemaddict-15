@@ -6,6 +6,8 @@ export const SortType = {
 
 export const UserAction = {
   UPDATE_FILM_CARD: 'UPDATE_FILM_CARD',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+  ADD_COMMENT: 'ADD_COMMENT',
 };
 
 export const UpdateType = {

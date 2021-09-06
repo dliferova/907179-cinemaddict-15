@@ -2,6 +2,7 @@ import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/popup-view';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
 import {UpdateType, UserAction} from '../const.js';
+import {generateComment} from '../mock/comment-mock.js';
 
 export default class FilmCard {
   constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose) {
@@ -20,6 +21,8 @@ export default class FilmCard {
     this._onAddToWatchClick = this._onAddToWatchClick.bind(this);
     this._onAlreadyWatchedClick = this._onAlreadyWatchedClick.bind(this);
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
+    this._onCommentDeleteCLick = this._onCommentDeleteCLick.bind(this);
+    this._onSubmitCommentHandler = this._onSubmitCommentHandler.bind(this);
   }
 
   init(film) {
@@ -42,8 +45,11 @@ export default class FilmCard {
     this._filmDetailsComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
     this._filmDetailsComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
+    this._filmDetailsComponent.setDeleteCommentClickHandler(this._onCommentDeleteCLick);
+    this._filmDetailsComponent.setAddCommentClickHandler(this._onSubmitCommentHandler);
 
-    if (prevFilmCardComponent === null ||  prevFilmDetailsComponent === null) {
+
+    if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
       renderElement(this._filmCardListContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -121,5 +127,39 @@ export default class FilmCard {
         },
       ),
     );
+  }
+
+  _onCommentDeleteCLick(id) {
+    this._changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      Object.assign(
+        {},
+        this._film,
+        {
+          comments: this._film.comments.filter((comment) => comment.id !== id),
+        },
+      ),
+    );
+  }
+
+  _onSubmitCommentHandler(selectedCommentEmotion, newCommentText) {
+    if (this._mainContainer.contains(this._filmDetailsComponent.getElement())) {
+      const newComment = generateComment(newCommentText, selectedCommentEmotion);
+      const newComments = this._film.comments.slice();
+      newComments.push(newComment);
+
+      this._changeData(
+        UserAction.UPDATE_FILM_CARD,
+        UpdateType.PATCH,
+        Object.assign(
+          {},
+          this._film,
+          {
+            comments: newComments,
+          },
+        ),
+      );
+    }
   }
 }

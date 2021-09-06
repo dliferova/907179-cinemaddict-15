@@ -119,22 +119,22 @@ const getFilmDetailsPopupTemplate = (data) => {
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${selectedCommentEmotion === 'smile' ? 'checked': ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${selectedCommentEmotion === 'smile' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-smile">
                 <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${selectedCommentEmotion === 'sleeping' ? 'checked': ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${selectedCommentEmotion === 'sleeping' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-sleeping">
                 <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${selectedCommentEmotion === 'puke' ? 'checked': ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${selectedCommentEmotion === 'puke' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-puke">
                 <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${selectedCommentEmotion === 'angry' ? 'checked': ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${selectedCommentEmotion === 'angry' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
@@ -155,6 +155,8 @@ export default class FilmDetails extends SmartView {
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emotionsChangeHandler = this._emotionsChangeHandler.bind(this);
+    this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
+    this._addCommentClickHandler = this._addCommentClickHandler.bind(this);
     this._setInnerHandlers();
     this._checkedEmotion = null;
   }
@@ -168,6 +170,8 @@ export default class FilmDetails extends SmartView {
     this.setAddToWatchListClickHandler(this._callback.addToWatchButtonClick);
     this.setWatchedClickHandler(this._callback.watchedButtonCLick);
     this.setFavoriteClickHandler(this._callback.favoriteButtonClick);
+    this.setDeleteCommentClickHandler(this._callback.deleteCommentButtonClick);
+    this.setAddCommentClickHandler(this._callback.addNewCommentButtonClick);
     this._setInnerHandlers();
   }
 
@@ -231,6 +235,30 @@ export default class FilmDetails extends SmartView {
     if (evt.target.matches('input[type="radio"]')) {
       this._onEmotionChange(evt.target.value);
     }
+  }
+
+  _deleteCommentClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteCommentButtonClick(parseInt(evt.target.dataset.id, 10));
+  }
+
+  setDeleteCommentClickHandler(callback) {
+    this._callback.deleteCommentButtonClick = callback;
+    this.getElement().querySelectorAll('.film-details__comment-delete')
+      .forEach((comment) => comment.addEventListener('click', this._deleteCommentClickHandler));
+  }
+
+  _addCommentClickHandler(evt) {
+    if (evt.key === 'Enter' && evt.ctrlKey) {
+      evt.preventDefault();
+      const newCommentText = this.getElement().querySelector('.film-details__comment-input').value;
+      this._callback.addNewCommentButtonClick(this._data.selectedCommentEmotion, newCommentText);
+    }
+  }
+
+  setAddCommentClickHandler(callback) {
+    this._callback.addNewCommentButtonClick = callback;
+    this.getElement().addEventListener('keydown', this._addCommentClickHandler);
   }
 
   static parseFilmToData(film) {

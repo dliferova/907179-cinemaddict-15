@@ -1,7 +1,7 @@
 import AbstractView from './abstract.js';
 
 export const createCommentElement = (comment) => {
-  const {emotions, textComment, author, date} = comment;
+  const {emotions, textComment, author, date, id} = comment;
 
   return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
@@ -12,7 +12,7 @@ export const createCommentElement = (comment) => {
         <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${date.fromNow()}</span>
-            <button class="film-details__comment-delete">Delete</button>
+            <button class="film-details__comment-delete" data-id="${id}">Delete</button>
         </p>
     </div>
     </li>`;

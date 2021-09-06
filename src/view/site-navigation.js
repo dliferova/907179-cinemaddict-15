@@ -1,5 +1,5 @@
 import AbstractView from './abstract.js';
-import {FilterType} from "../const";
+import {FilterType} from '../const.js';
 
 const createSiteNavigationItem = (filter, currentFilterType) => {
   const {type, name, count} = filter;

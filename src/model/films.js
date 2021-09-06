@@ -6,12 +6,10 @@ export default class Films extends AbstractObserver {
     this._films = [];
   }
 
-  //Записывает в модель данные
   setFilms(films) {
     this._films = films.slice();
   }
 
-  //Возвращает значение приватного свойства
   getFilms() {
     return this._films;
   }

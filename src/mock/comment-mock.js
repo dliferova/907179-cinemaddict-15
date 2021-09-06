@@ -5,7 +5,7 @@ dayjs.extend(relativeTime);
 
 const generateDate = () => generateRandomDate(new Date(2020, 0, 1), new Date());
 
-const generateCommentText = () => {
+export const generateCommentText = () => {
   const texts = [
     'Great movie!',
     'I am not sure which is more pathetic...',
@@ -33,7 +33,7 @@ const generateAuthorName = () => {
   return names[randomIndex];
 };
 
-const generateEmotion = () => {
+export const generateEmotion = () => {
   const emotions = [
     'angry',
     'puke',
@@ -46,9 +46,12 @@ const generateEmotion = () => {
   return emotions[randomIndex];
 };
 
-export const generateComment = () => ({
-  textComment: generateCommentText(),
-  emotions: generateEmotion(),
+let i = 1;
+
+export const generateComment = (textComment, emotion) => ({
+  textComment: textComment,
+  emotions: emotion,
   author: generateAuthorName(),
   date: generateDate(),
+  id: i++,
 });

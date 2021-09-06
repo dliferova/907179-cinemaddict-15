@@ -150,6 +150,9 @@ export default class FilmCardList {
       case UserAction.UPDATE_FILM_CARD:
         this._filmsModel.updateFilm(updateType, update);
         break;
+      case UserAction.DELETE_COMMENT:
+        this._filmsModel.updateFilm(updateType, update);
+        break;
     }
   }
 
