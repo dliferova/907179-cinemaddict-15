@@ -6,6 +6,7 @@ import FilmCardPresenter from './film-card-presenter.js';
 import {UpdateType, UserAction, SortType, FilterType} from '../const.js';
 import {filter} from '../utils/filter.js';
 import EmptyListView from '../view/film-list-empty.js';
+import SortView from '../view/sort.js';
 
 const EXTRA_CARDS_COUNT = 2;
 const CARDS_COUNT_PER_STEP = 5;
@@ -23,13 +24,14 @@ export default class FilmCardList {
     this._openedPopupId = null;
     this._showMoreButtonComponent = null;
     this._emptyListComponent = null;
-    // this._sortComponent = null;
+    this._sortComponent = null;
 
     this._filmsSectionComponent = new FilmsSectionView();
     this._filmListComponent = new FilmListView(LIST_TITLE, false);
     this._topRatedListComponent = new FilmListView(TOP_RATED_LIST_TITLE, true);
     this._mostCommentedListComponent = new FilmListView(MOST_COMMENTED_LIST_TITLE, true);
     this._emptyListComponent = new EmptyListView();
+    this._sortComponent = new SortView();
 
     this._filmCardPresenters = new Map();
     this._topRatedListPresenters = new Map();
@@ -41,7 +43,7 @@ export default class FilmCardList {
     this._currentSortType = SortType.SORT_BY_DEFAULT;
 
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
-    // this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
@@ -216,30 +218,23 @@ export default class FilmCardList {
       return;
     }
 
+    this._renderSort();
     this._renderFilmList();
     this._renderTopRatedFilmList();
     this._renderMostCommentedFilmList();
   }
 
   // TODO перенести сортировку из main.js
-  // _handleSortTypeChange(sortType) {
-  //   if (this._currentSortType === sortType) {
-  //     return;
-  //   }
-  //
-  //   this._currentSortType = sortType;
-  // }
+  _handleSortTypeChange() {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+  }
 
-  // _renderSort() {
-  //   if (this._sortComponent !==null) {
-  //     this._sortComponent = null;
-  //   }
-  //
-  //   this._sortComponent = new SortView(this._currentSortType);
-  //   this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-  //
-  //   renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
-  // }
+  _renderSort() {
+    renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+  }
 
   _renderTopRatedFilmList() {
     renderElement(this._filmsSectionComponent, this._topRatedListComponent, RenderPosition.BEFOREEND);

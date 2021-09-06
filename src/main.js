@@ -32,7 +32,5 @@ renderElement(footerStatisticsSection, new FooterStatisticView(generateStatistic
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 filterPresenter.init();
 
-renderElement(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
-
 const filmCardListPresenter = new FilmCardListPresenter(siteMainElement, body, filmsModel, filterModel);
 filmCardListPresenter.init();
