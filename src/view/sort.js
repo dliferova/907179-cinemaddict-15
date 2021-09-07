@@ -1,15 +1,36 @@
 import AbstractView from './abstract.js';
+import {SortType} from '../const.js';
 
-const createSortTemplate = () => (
-  ` <ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
+const createSortTemplate = (currentSortType) => (
+  `<ul class="sort">
+    <li><a href="#" class="sort__button ${currentSortType === SortType.SORT_BY_DEFAULT ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_DEFAULT}">Sort by default</a></li>
+    <li><a href="#" class="sort__button ${currentSortType === SortType.SORT_BY_DATE ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_DATE}">Sort by date</a></li>
+    <li><a href="#" class="sort__button ${currentSortType === SortType.SORT_BY_RATING ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_RATING}">Sort by rating</a></li>
   </ul>`
 );
 
-export default class FilmList extends AbstractView {
+export default class Sort extends AbstractView {
+  constructor(currentSortType) {
+    super();
+    this._currentSortType = currentSortType;
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+  }
+
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._currentSortType);
+  }
+
+  _sortTypeChangeHandler(evt) {
+    if (evt.target.tagName !== 'A') {
+      return;
+    }
+
+    evt.preventDefault();
+    this._callback.sortTypeChange(evt.target.dataset.sortType);
+  }
+
+  setSortTypeChangeHandler(callback) {
+    this._callback.sortTypeChange = callback;
+    this.getElement().addEventListener('click', this._sortTypeChangeHandler);
   }
 }
