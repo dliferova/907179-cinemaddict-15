@@ -1,6 +1,7 @@
 import {generateRandomDate, getRandomFromRange} from '../utils/common.js';
 import {generateComment, generateCommentText, generateEmotion} from './comment-mock.js';
 import {nanoid} from 'nanoid';
+import dayjs from 'dayjs';
 
 const generateTitle = () => {
   const titles = [
