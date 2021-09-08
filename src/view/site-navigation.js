@@ -10,7 +10,7 @@ const createSiteNavigationItem = (filter, currentFilterType) => {
   } else {
     return `<a href="#${type.toLowerCase()}"
       class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}" data-filter-name = "${type.toLowerCase()}">${name}
-      <span class="${type === FilterType.ALL ? 'visually-hidden': 'main-navigation__item-count'}">${count}</span>
+      <span class="${type === FilterType.ALL ? 'visually-hidden' : 'main-navigation__item-count'}">${count}</span>
       </a>`;
   }
 };
@@ -18,12 +18,13 @@ const createSiteNavigationItem = (filter, currentFilterType) => {
 const createSiteNavigationTemplate = (filterItem, currentFilterType) => {
   const filterItemsTemplate = filterItem.map((filter) => createSiteNavigationItem(filter, currentFilterType))
     .join('');
+  const statsType = FilterType.STATS;
 
   return `<nav class="main-navigation">
     <div class="main-navigation__items">
       ${filterItemsTemplate}
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" class="main-navigation__additional ${statsType === currentFilterType ? 'main-navigation__item--active' : ''}" data-filter-name = "${statsType.toLowerCase()}">Stats</a>
     </nav>`;
 };
 

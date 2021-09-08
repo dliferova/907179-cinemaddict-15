@@ -60,7 +60,6 @@ export default class FilmCardList {
   init() {
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
-
     this._renderFilms();
   }
 
