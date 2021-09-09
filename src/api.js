@@ -1,3 +1,5 @@
+import FilmsModel from './model/films.js';
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -19,17 +21,18 @@ export default class Api {
 
   getFilms() {
     return this._load({url: 'movies'})
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((films) => films.map(FilmsModel.adaptToClient));
   }
 
   updateFilm(film) {
     return this._load({
       url: `movies/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(film),
+      body: JSON.stringify(FilmsModel.adaptToServer(film)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON);
+      .then(FilmsModel.adaptToClient);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
