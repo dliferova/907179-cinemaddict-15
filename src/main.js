@@ -10,8 +10,17 @@ import FilterModel from './model/filter.js';
 import FilmsModel from './model/films.js';
 import {FilterType, MenuItem} from './const.js';
 import StatisticSectionView from './view/stats.js';
+import Api from './api.js';
 
 const FILM_TOTAL = 17;
+const AUTHORIZATION = 'Basic 2xci13mod4x';
+const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getFilms().then((films) => {
+  console.log(films);
+});
 
 const filmsData = new Array(FILM_TOTAL).fill(null).map(() => generateFilmCard());
 
