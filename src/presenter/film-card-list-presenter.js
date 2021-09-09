@@ -6,7 +6,8 @@ import FilmCardPresenter from './film-card-presenter.js';
 import {UpdateType, UserAction, SortType, FilterType} from '../const.js';
 import {filter} from '../utils/filter.js';
 import EmptyListView from '../view/film-list-empty.js';
-import SortView from '../view/sort.js';
+import SortView from '../view/sort-view.js';
+import {sortByDate, sortByRating} from '../utils/sort.js';
 
 const EXTRA_CARDS_COUNT = 2;
 const CARDS_COUNT_PER_STEP = 5;
@@ -23,8 +24,6 @@ export default class FilmCardList {
 
     this._openedPopupId = null;
     this._showMoreButtonComponent = null;
-    this._emptyListComponent = null;
-    this._sortComponent = null;
 
     this._filmsSectionComponent = new FilmsSectionView();
     this._filmListComponent = new FilmListView(LIST_TITLE, false);
@@ -46,20 +45,40 @@ export default class FilmCardList {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+  }
 
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+  destroy() {
+    this._clearFilmList({resetRenderFilmCount: true, resetSortType: true});
+
+    removeElement(this._sortComponent);
+    removeElement(this._filmsSectionComponent);
+
+    this._filmsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   init() {
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderFilms();
   }
 
   _getFilms() {
     this._filterType = this._filterModel.getFilter();
     const films = this._filmsModel.getFilms();
-    const filteredFilm = filter[this._filterType](films);
-    return filteredFilm;
+    const filteredFilms = filter[this._filterType](films);
+
+    switch (this._currentSortType) {
+      case SortType.SORT_BY_DATE:
+        sortByDate(filteredFilms);
+        break;
+      case SortType.SORT_BY_RATING:
+        sortByRating(filteredFilms);
+        break;
+    }
+
+    return filteredFilms;
   }
 
   _renderFilmList() {
@@ -93,11 +112,8 @@ export default class FilmCardList {
     renderElement(this._filmListComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _removeShowMoreButton() {
-    this._showMoreButtonComponent.getElement().remove();
-  }
-
   _renderEmptyFilteredList() {
+    removeElement(this._sortComponent);
     removeElement(this._filmListComponent);
     removeElement(this._topRatedListComponent);
     removeElement(this._mostCommentedListComponent);
@@ -116,7 +132,7 @@ export default class FilmCardList {
     this._renderedFilmCount = newRenderedFilmCount;
 
     if (this._renderedFilmCount >= filmCount) {
-      this._removeShowMoreButton();
+      removeElement(this._showMoreButtonComponent);
     }
   }
 
@@ -142,10 +158,6 @@ export default class FilmCardList {
 
 
   _handleViewAction(actionType, updateType, update) {
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_FILM_CARD:
         this._filmsModel.updateFilm(updateType, update);
@@ -163,10 +175,6 @@ export default class FilmCardList {
   }
 
   _handleModelEvent(updateType, data) {
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
         this._initFilmCardPresenters(this._filmCardPresenters, data);
@@ -196,7 +204,7 @@ export default class FilmCardList {
     this._clearMapPresenter(this._topRatedListPresenters);
     this._clearMapPresenter(this._mostCommentedListPresenters);
 
-    this._removeShowMoreButton();
+    removeElement(this._showMoreButtonComponent);
 
     if (this._emptyListComponent) {
       removeElement(this._emptyListComponent);
@@ -227,16 +235,20 @@ export default class FilmCardList {
     this._renderMostCommentedFilmList();
   }
 
-  // TODO перенести сортировку из main.js
-  _handleSortTypeChange() {
-    // - Сортируем задачи
-    // - Очищаем список
-    // - Рендерим список заново
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._currentSortType = sortType;
+    this._clearFilmList();
+    this._renderFilms();
   }
 
   _renderSort() {
-    renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    if (!this._mainContainer.contains(this._sortComponent.getElement())) {
+      renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
+      this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    }
   }
 
   _renderTopRatedFilmList() {
