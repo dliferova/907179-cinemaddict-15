@@ -81,7 +81,8 @@ const getFilmDetailsPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
+<!--              TODO -->
+              <td class="film-details__cell">${duration}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

@@ -1,4 +1,5 @@
 import AbstractObserver from '../utils/observer.js';
+import dayjs from 'dayjs';
 
 export default class Films extends AbstractObserver {
   constructor() {
@@ -6,8 +7,10 @@ export default class Films extends AbstractObserver {
     this._films = [];
   }
 
-  setFilms(films) {
+  setFilms(updateType, films) {
     this._films = films.slice();
+
+    this._notify(updateType);
   }
 
   getFilms() {
@@ -42,8 +45,8 @@ export default class Films extends AbstractObserver {
         alternativeTitle: film['film_info']['alternative_title'],
         ageRestriction: film['film_info']['age_rating'],
         rating: film['film_info']['total_rating'],
-        releaseDate: film['film_info']['release']['date'],
-        //duration: film['film_info']['runtime'],
+        releaseDate: dayjs(film['film_info']['release']['date']),
+        duration: film['film_info']['runtime'],
         genres: film['film_info']['genre'],
         description: film['film_info']['description'],
         director: film['film_info']['director'],
@@ -53,6 +56,7 @@ export default class Films extends AbstractObserver {
         isAddedToWatchList: film['user_details']['watchlist'],
         isAlreadyWatched: film['user_details']['already_watched'],
         isFavorite: film['user_details']['favorite'],
+        comments: [],
       },
     );
 

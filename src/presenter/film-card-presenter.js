@@ -5,14 +5,14 @@ import {UpdateType, UserAction} from '../const.js';
 import {generateComment} from '../mock/comment-mock.js';
 
 export default class FilmCard {
-  constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose) {
+  constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose, api) {
     this._filmCardListContainer = filmCardListContainer;
     this._mainContainer = mainContainer;
     this._bodyContainer = bodyContainer;
     this._changeData = changeData;
     this._onPopupOpen = onPopupOpen;
     this._onPopupClose = onPopupClose;
-
+    this._api = api;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
 

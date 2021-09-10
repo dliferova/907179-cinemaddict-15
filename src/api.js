@@ -10,9 +10,6 @@ const SuccessHTTPStatusRange = {
   MAX: 299,
 };
 
-//*** endpoint = https://15.ecmascript.pages.academy/cinemaddict;
-//** url = endpoint +//movies
-
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -32,6 +29,7 @@ export default class Api {
       body: JSON.stringify(FilmsModel.adaptToServer(film)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
+      .then(Api.toJSON())
       .then(FilmsModel.adaptToClient);
   }
 
