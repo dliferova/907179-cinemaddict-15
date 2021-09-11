@@ -1,14 +1,14 @@
 import AbstractView from './abstract.js';
 
 export const createCommentElement = (comment) => {
-  const {emotions, textComment, author, date, id} = comment;
+  const {emotion, commentMessage, author, date, id} = comment;
 
   return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emotions}.png" width="55" height="55" alt="emoji-${emotions}">
+        <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
     <div>
-        <p class="film-details__comment-text">${textComment}</p>
+        <p class="film-details__comment-text">${commentMessage}</p>
         <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${date.fromNow()}</span>

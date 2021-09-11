@@ -24,6 +24,9 @@ const getFilmDetailsPopupTemplate = (data) => {
   } = data;
 
   const renderComments = (array) => {
+    if (array === null) {
+      return '';
+    }
     let resultString = '';
     for (let i = 0; i < array.length; i++) {
       resultString = resultString + createCommentElement(array[i]);
@@ -107,7 +110,7 @@ const getFilmDetailsPopupTemplate = (data) => {
 
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments !== null ? comments.length : 'not loaded'}</span></h3>
 
         <ul class="film-details__comments-list">
           ${renderComments(comments)}
@@ -149,9 +152,9 @@ const getFilmDetailsPopupTemplate = (data) => {
 };
 
 export default class FilmDetails extends SmartView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
-    this._data = FilmDetails.parseFilmToData(film);
+    this._data = FilmDetails.parseToData(film, comments);
     this._clickHandler = this._clickHandler.bind(this);
     this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -263,12 +266,13 @@ export default class FilmDetails extends SmartView {
     this.getElement().addEventListener('keydown', this._addCommentClickHandler);
   }
 
-  static parseFilmToData(film) {
+  static parseToData(film, comments) {
     return Object.assign(
       {},
       film,
       {
         selectedCommentEmotion: null,
+        comments: comments,
       },
     );
   }
