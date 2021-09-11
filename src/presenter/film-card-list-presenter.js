@@ -167,8 +167,7 @@ export default class FilmCardList {
         this._api.updateFilm(update)
           .then((response) => {
             this._filmsModel.updateFilm(updateType, response);
-          })
-          .catch(reason => console.error(reason));
+          });
         break;
       case UserAction.ADD_COMMENT:
         // TODO вторая часть

@@ -24,7 +24,7 @@ export default class Comments {
     return adaptedComment;
   }
 
-  static adaptToServer(comment) {
-    // TODO
-  }
+  // static adaptToServer(comment) {
+  //   // TODO
+  // }
 }

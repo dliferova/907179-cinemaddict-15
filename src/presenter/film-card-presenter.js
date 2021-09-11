@@ -86,8 +86,7 @@ export default class FilmCard {
       .then((comments) => {
         show(comments);
       })
-      .catch((reason) => {
-        console.error(reason);
+      .catch(() => {
         show(null);
       });
   }

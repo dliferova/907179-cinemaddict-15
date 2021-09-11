@@ -81,7 +81,6 @@ api.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
   })
-  .catch((reason) => {
-    console.error(reason);
+  .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
   });
