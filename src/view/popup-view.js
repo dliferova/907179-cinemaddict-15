@@ -5,6 +5,7 @@ const getFilmDetailsPopupTemplate = (data) => {
   const {
     poster,
     title,
+    alternativeTitle,
     rating,
     ageRestriction,
     director,
@@ -12,7 +13,7 @@ const getFilmDetailsPopupTemplate = (data) => {
     cast,
     releaseDate,
     duration,
-    country,
+    releaseCountry,
     genres,
     description,
     comments,
@@ -23,6 +24,9 @@ const getFilmDetailsPopupTemplate = (data) => {
   } = data;
 
   const renderComments = (array) => {
+    if (array === null) {
+      return '';
+    }
     let resultString = '';
     for (let i = 0; i < array.length; i++) {
       resultString = resultString + createCommentElement(array[i]);
@@ -54,7 +58,7 @@ const getFilmDetailsPopupTemplate = (data) => {
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">Original: ${title}</p>
+              <p class="film-details__title-original">Original: ${alternativeTitle}</p>
             </div>
 
             <div class="film-details__rating">
@@ -80,11 +84,12 @@ const getFilmDetailsPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
+<!--              TODO -->
+              <td class="film-details__cell">${duration}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
-              <td class="film-details__cell">${country}</td>
+              <td class="film-details__cell">${releaseCountry}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
@@ -105,7 +110,7 @@ const getFilmDetailsPopupTemplate = (data) => {
 
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments !== null ? comments.length : 'not loaded'}</span></h3>
 
         <ul class="film-details__comments-list">
           ${renderComments(comments)}
@@ -147,9 +152,9 @@ const getFilmDetailsPopupTemplate = (data) => {
 };
 
 export default class FilmDetails extends SmartView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
-    this._data = FilmDetails.parseFilmToData(film);
+    this._data = FilmDetails.parseToData(film, comments);
     this._clickHandler = this._clickHandler.bind(this);
     this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -261,12 +266,13 @@ export default class FilmDetails extends SmartView {
     this.getElement().addEventListener('keydown', this._addCommentClickHandler);
   }
 
-  static parseFilmToData(film) {
+  static parseToData(film, comments) {
     return Object.assign(
       {},
       film,
       {
         selectedCommentEmotion: null,
+        comments: comments,
       },
     );
   }

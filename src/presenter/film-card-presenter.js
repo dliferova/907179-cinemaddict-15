@@ -5,16 +5,17 @@ import {UpdateType, UserAction} from '../const.js';
 import {generateComment} from '../mock/comment-mock.js';
 
 export default class FilmCard {
-  constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose) {
+  constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose, api) {
     this._filmCardListContainer = filmCardListContainer;
     this._mainContainer = mainContainer;
     this._bodyContainer = bodyContainer;
     this._changeData = changeData;
     this._onPopupOpen = onPopupOpen;
     this._onPopupClose = onPopupClose;
-
+    this._api = api;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
+    this._comments = [];
 
     this._openFilmDetailPopup = this._openFilmDetailPopup.bind(this);
     this.closeFilmDetailPopup = this.closeFilmDetailPopup.bind(this);
@@ -32,7 +33,7 @@ export default class FilmCard {
     const prevFilmDetailsComponent = this._filmDetailsComponent;
 
     this._filmCardComponent = new FilmCardView(film);
-    this._filmDetailsComponent = new FilmDetailsView(film);
+    this._initFilmDetailsComponent();
 
     this._filmCardComponent.setTitleClickHandler(this._openFilmDetailPopup);
     this._filmCardComponent.setPosterClickHandler(this._openFilmDetailPopup);
@@ -40,13 +41,6 @@ export default class FilmCard {
     this._filmCardComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
     this._filmCardComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
     this._filmCardComponent.setFavoriteClickHandler(this._onFavoriteClick);
-    this._filmDetailsComponent.setClickHandler(this.closeFilmDetailPopup);
-
-    this._filmDetailsComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
-    this._filmDetailsComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
-    this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
-    this._filmDetailsComponent.setDeleteCommentClickHandler(this._onCommentDeleteCLick);
-    this._filmDetailsComponent.setAddCommentClickHandler(this._onSubmitCommentHandler);
 
 
     if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
@@ -65,14 +59,36 @@ export default class FilmCard {
     removeElement(prevFilmCardComponent);
   }
 
+  _initFilmDetailsComponent() {
+    this._filmDetailsComponent = new FilmDetailsView(this._film, this._comments);
+
+    this._filmDetailsComponent.setClickHandler(this.closeFilmDetailPopup);
+    this._filmDetailsComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
+    this._filmDetailsComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
+    this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
+    this._filmDetailsComponent.setDeleteCommentClickHandler(this._onCommentDeleteCLick);
+    this._filmDetailsComponent.setAddCommentClickHandler(this._onSubmitCommentHandler);
+  }
+
   destroy() {
     removeElement(this._filmCardComponent);
   }
 
   _openFilmDetailPopup() {
     this._onPopupOpen();
-    this._mainContainer.appendChild(this._filmDetailsComponent.getElement());
-    this._bodyContainer.classList.toggle('hide-overflow');
+    const show = (comments) => {
+      this._comments = comments.slice();
+      this._initFilmDetailsComponent();
+      this._mainContainer.appendChild(this._filmDetailsComponent.getElement());
+      this._bodyContainer.classList.toggle('hide-overflow');
+    };
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        show(comments);
+      })
+      .catch(() => {
+        show(null);
+      });
   }
 
   closeFilmDetailPopup() {
@@ -150,7 +166,7 @@ export default class FilmCard {
       newComments.push(newComment);
 
       this._changeData(
-        UserAction.UPDATE_FILM_CARD,
+        UserAction.ADD_COMMENT,
         UpdateType.PATCH,
         Object.assign(
           {},

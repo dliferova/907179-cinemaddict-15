@@ -1,15 +1,16 @@
 import AbstractView from './abstract.js';
 
-const createStatisticSection = (statisticData) => {
-  const {watchedFilmsCount, totalDuration, topGenre} = statisticData;
-
-  return `<p class="statistic__rank">
+const createStatisticSection = () => (
+  `<section class="statistic">
+    <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       <span class="statistic__rank-label">Movie buff</span>
     </p>
-    <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
+
+      <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
+
       <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
       <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
@@ -28,30 +29,30 @@ const createStatisticSection = (statisticData) => {
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${watchedFilmsCount}<span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">22<span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${totalDuration.hours}h ${totalDuration.minutes}m</span></p>
+        <p class="statistic__item-text">130<span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${topGenre}</p>
+        <p class="statistic__item-text">Sci-Fi</p>
       </li>
     </ul>
+
     <div class="statistic__chart-wrap">
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
-  </section>`;
-};
+  </section>`
+);
 
 export default class StatisticSection extends AbstractView {
-  constructor(statisticData) {
+  constructor() {
     super();
-    this._statisticData = statisticData;
   }
 
   getTemplate() {
-    return createStatisticSection(this._statisticData);
+    return createStatisticSection();
   }
 }
