@@ -33,8 +33,6 @@ export default class Films extends AbstractObserver {
     this._notify(updateType, update);
   }
 
-  //Добавить alternativeTitle
-
   static adaptToClient(film) {
     const adaptedFilm = Object.assign(
       {},
