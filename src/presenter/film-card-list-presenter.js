@@ -2,7 +2,7 @@ import {RenderPosition, renderElement, removeElement} from '../utils/render.js';
 import FilmsSectionView from '../view/films-section.js';
 import FilmListView from '../view/films-list.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
-import FilmCardPresenter from './film-card-presenter.js';
+import FilmCardPresenter, {State as FilmCardPresenterViewState} from './film-card-presenter.js';
 import {UpdateType, UserAction, SortType, FilterType} from '../const.js';
 import {filter} from '../utils/filter.js';
 import EmptyListView from '../view/film-list-empty.js';
@@ -173,6 +173,7 @@ export default class FilmCardList {
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
+        // this._filmCardPresenters.get(update.id).setViewState(FilmCardPresenterViewState.DELETING);
         this._filmsModel.updateFilm(updateType, update);
         break;
     }

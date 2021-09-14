@@ -146,9 +146,10 @@ export default class FilmCard {
   }
 
   _onCommentDeleteCLick(id) {
+    this._filmDetailsComponent.setCommentDeleting(id, true);
     this._api.deleteComment(id)
       .then(() => {
-        this._comments = this._comments.filter((comment) => comment.id !== id.toString());
+        this._comments = this._comments.filter((comment) => comment.id !== id);
         this._changeData(
           UserAction.DELETE_COMMENT,
           UpdateType.PATCH,
@@ -159,6 +160,10 @@ export default class FilmCard {
               comments: this._film.comments.filter((commentId) => commentId !== id),
             },
           ));
+      })
+      .catch((reason) => {
+        console.error(reason);
+        this._filmDetailsComponent.setCommentDeleting(id, false);
       });
   }
 
