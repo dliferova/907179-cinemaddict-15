@@ -164,11 +164,13 @@ export default class FilmCard {
       .catch((reason) => {
         console.error(reason);
         this._filmDetailsComponent.setCommentDeleting(id, false);
+        this._filmDetailsComponent.setErrorAction();
       });
   }
 
   _onSubmitCommentHandler(selectedCommentEmotion, newCommentText) {
     if (this._mainContainer.contains(this._filmDetailsComponent.getElement())) {
+      this._filmDetailsComponent.setAddingNewComment(true);
       this._api.addComment(this._film.id, {
         comment: newCommentText,
         emotion: selectedCommentEmotion,
@@ -179,7 +181,11 @@ export default class FilmCard {
           UpdateType.PATCH,
           filmAndComments.film,
         );
-      });
+      })
+        .catch((reason) => {
+          console.error(reason);
+          this._filmDetailsComponent.setAddingNewComment(false);
+        });
     }
   }
 }

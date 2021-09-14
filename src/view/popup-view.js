@@ -25,6 +25,8 @@ const getFilmDetailsPopupTemplate = (data) => {
     isAdding,
   } = data;
 
+  console.log(isAdding);
+
   const renderComments = (array) => {
     if (array === null) {
       return '';
@@ -123,7 +125,7 @@ const getFilmDetailsPopupTemplate = (data) => {
             ${selectedCommentEmotion ? `<img src="images/emoji/${selectedCommentEmotion}.png" width="55" height="55" alt="emoji-${selectedCommentEmotion}">` : ''}
           </div>
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isAdding ? 'disabled' : ''}></textarea>
+            <textarea class="film-details__comment-input" placeholder="${isAdding ? 'Sending...' : 'Select reaction below and write comment here'}" name="comment" ${isAdding ? 'disabled' : ''}></textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -278,6 +280,18 @@ export default class FilmDetails extends SmartView {
         return comment;
       }),
     });
+  }
+
+  setAddingNewComment(addingStatus) {
+    this.updateData(
+      {
+        isAdding: addingStatus,
+      },
+    );
+  }
+
+  setErrorAction() {
+
   }
 
   static parseToData(film, comments) {
