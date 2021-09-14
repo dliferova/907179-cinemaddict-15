@@ -3,7 +3,7 @@ import AbstractView from './abstract.js';
 export const createCommentElement = (comment) => {
   const {emotion, commentMessage, author, date, id, isDeleting} = comment;
 
-  return `<li class="film-details__comment">
+  return `<li class="film-details__comment" data-id="${id}">
     <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>

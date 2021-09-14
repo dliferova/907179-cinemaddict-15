@@ -2,6 +2,8 @@ import SmartView from './smart.js';
 import {createCommentElement} from './comment-view.js';
 import dayjs from 'dayjs';
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const getFilmDetailsPopupTemplate = (data) => {
   const {
     poster,
@@ -24,8 +26,6 @@ const getFilmDetailsPopupTemplate = (data) => {
     selectedCommentEmotion,
     isAdding,
   } = data;
-
-  console.log(isAdding);
 
   const renderComments = (array) => {
     if (array === null) {
@@ -290,8 +290,13 @@ export default class FilmDetails extends SmartView {
     );
   }
 
-  setErrorAction() {
-
+  shakeCommentsSection(commentId, callback) {
+    const commentElement = this.getElement().querySelector(`li[data-id="${commentId}"]`);
+    commentElement.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      commentElement.style.animation = '';
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   static parseToData(film, comments) {

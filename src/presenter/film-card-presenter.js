@@ -85,8 +85,7 @@ export default class FilmCard {
       .then((comments) => {
         show(comments);
       })
-      .catch((reason) => {
-        console.error(reason);
+      .catch(() => {
         show(null);
       });
   }
@@ -161,10 +160,11 @@ export default class FilmCard {
             },
           ));
       })
-      .catch((reason) => {
-        console.error(reason);
-        this._filmDetailsComponent.setCommentDeleting(id, false);
-        this._filmDetailsComponent.setErrorAction();
+      .catch(() => {
+        const afterShaking = () => {
+          this._filmDetailsComponent.setCommentDeleting(id, false);
+        };
+        this._filmDetailsComponent.shakeCommentsSection(id, afterShaking);
       });
   }
 
@@ -182,9 +182,11 @@ export default class FilmCard {
           filmAndComments.film,
         );
       })
-        .catch((reason) => {
-          console.error(reason);
-          this._filmDetailsComponent.setAddingNewComment(false);
+        .catch(() => {
+          const afterShaking = () => {
+            this._filmDetailsComponent.setAddingNewComment(false);
+          };
+          this._filmDetailsComponent.shake(afterShaking);
         });
     }
   }
