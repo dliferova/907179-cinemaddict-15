@@ -29,3 +29,11 @@ export const MenuItem = {
   FILMS: 'FILMS',
   STATISTICS: 'STATISTICS',
 };
+
+export const StatsFilterType = {
+  ALL_TIME: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};

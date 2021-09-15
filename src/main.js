@@ -35,7 +35,7 @@ renderElement(siteHeaderElement, new UserProfileView(), RenderPosition.BEFOREEND
 renderElement(footerStatisticsSection, new FooterStatisticView(generateStatisticData()), RenderPosition.AFTERBEGIN);
 
 const filmCardListPresenter = new FilmCardListPresenter(siteMainElement, body, filmsModel, filterModel, api);
-const statsView = new StatisticSectionView();
+const statsView = new StatisticSectionView(filmsModel);
 
 const showFilms = () => {
   removeElement(statsView);
@@ -44,6 +44,7 @@ const showFilms = () => {
 
 const showStats = () => {
   filmCardListPresenter.destroy();
+  statsView.init();
   renderElement(siteMainElement, statsView, RenderPosition.BEFOREEND);
 };
 
