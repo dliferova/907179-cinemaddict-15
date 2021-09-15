@@ -24,6 +24,7 @@ export default class FilmCard {
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
     this._onCommentDeleteCLick = this._onCommentDeleteCLick.bind(this);
     this._onSubmitCommentHandler = this._onSubmitCommentHandler.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init(film) {
@@ -75,6 +76,7 @@ export default class FilmCard {
   }
 
   _openFilmDetailPopup() {
+    document.addEventListener('keydown', this._escKeyDownHandler);
     this._onPopupOpen();
     const show = (comments) => {
       this._comments = comments.slice();
@@ -89,6 +91,15 @@ export default class FilmCard {
       .catch(() => {
         show(null);
       });
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this._mainContainer.removeChild(this._filmDetailsComponent.getElement());
+      this._bodyContainer.classList.toggle('hide-overflow');
+      document.removeEventListener('keydown', this._escKeyDownHandler);
+    }
   }
 
   closeFilmDetailPopup() {
