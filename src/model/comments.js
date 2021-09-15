@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 export default class Comments {
-
   static adaptToClient(comment) {
     const adaptedComment = Object.assign(
       {},
@@ -24,7 +25,11 @@ export default class Comments {
     return adaptedComment;
   }
 
-  // static adaptToServer(comment) {
-  //   // TODO
-  // }
+  static adaptToServer(comment) {
+    const adaptedComment = {};
+    adaptedComment['comment'] = comment.comment;
+    adaptedComment['emotion'] = comment.emotion;
+
+    return adaptedComment;
+  }
 }

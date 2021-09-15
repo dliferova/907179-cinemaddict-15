@@ -2,7 +2,6 @@ import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/popup-view';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
 import {UpdateType, UserAction} from '../const.js';
-import {generateComment} from '../mock/comment-mock.js';
 
 export default class FilmCard {
   constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose, api) {
@@ -146,36 +145,49 @@ export default class FilmCard {
   }
 
   _onCommentDeleteCLick(id) {
-    this._changeData(
-      UserAction.DELETE_COMMENT,
-      UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._film,
-        {
-          comments: this._film.comments.filter((comment) => comment.id !== id),
-        },
-      ),
-    );
+    this._filmDetailsComponent.setCommentDeleting(id, true);
+    this._api.deleteComment(id)
+      .then(() => {
+        this._comments = this._comments.filter((comment) => comment.id !== id);
+        this._changeData(
+          UserAction.DELETE_COMMENT,
+          UpdateType.PATCH,
+          Object.assign(
+            {},
+            this._film,
+            {
+              comments: this._film.comments.filter((commentId) => commentId !== id),
+            },
+          ));
+      })
+      .catch(() => {
+        const afterShaking = () => {
+          this._filmDetailsComponent.setCommentDeleting(id, false);
+        };
+        this._filmDetailsComponent.shakeCommentsSection(id, afterShaking);
+      });
   }
 
   _onSubmitCommentHandler(selectedCommentEmotion, newCommentText) {
     if (this._mainContainer.contains(this._filmDetailsComponent.getElement())) {
-      const newComment = generateComment(newCommentText, selectedCommentEmotion);
-      const newComments = this._film.comments.slice();
-      newComments.push(newComment);
-
-      this._changeData(
-        UserAction.ADD_COMMENT,
-        UpdateType.PATCH,
-        Object.assign(
-          {},
-          this._film,
-          {
-            comments: newComments,
-          },
-        ),
-      );
+      this._filmDetailsComponent.setAddingNewComment(true);
+      this._api.addComment(this._film.id, {
+        comment: newCommentText,
+        emotion: selectedCommentEmotion,
+      }).then((filmAndComments) => {
+        this._comments = filmAndComments.comments.slice();
+        this._changeData(
+          UserAction.ADD_COMMENT,
+          UpdateType.PATCH,
+          filmAndComments.film,
+        );
+      })
+        .catch(() => {
+          const afterShaking = () => {
+            this._filmDetailsComponent.setAddingNewComment(false);
+          };
+          this._filmDetailsComponent.shake(afterShaking);
+        });
     }
   }
 }

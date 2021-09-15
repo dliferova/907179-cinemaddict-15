@@ -33,8 +33,6 @@ export default class Films extends AbstractObserver {
     this._notify(updateType, update);
   }
 
-  //Добавить alternativeTitle
-
   static adaptToClient(film) {
     const adaptedFilm = Object.assign(
       {},
@@ -49,7 +47,7 @@ export default class Films extends AbstractObserver {
         screenwriters: film['film_info']['writers'],
         cast: film['film_info']['actors'],
         releaseDate: dayjs(film['film_info']['release']['date']),
-        country: film['film_info']['release']['release_country'],
+        releaseCountry: film['film_info']['release']['release_country'],
         duration: film['film_info']['runtime'],
         genres: film['film_info']['genre'],
         description: film['film_info']['description'],

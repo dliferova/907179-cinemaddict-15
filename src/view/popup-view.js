@@ -1,5 +1,8 @@
 import SmartView from './smart.js';
 import {createCommentElement} from './comment-view.js';
+import dayjs from 'dayjs';
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const getFilmDetailsPopupTemplate = (data) => {
   const {
@@ -21,6 +24,7 @@ const getFilmDetailsPopupTemplate = (data) => {
     isAlreadyWatched,
     isFavorite,
     selectedCommentEmotion,
+    isAdding,
   } = data;
 
   const renderComments = (array) => {
@@ -42,6 +46,8 @@ const getFilmDetailsPopupTemplate = (data) => {
     return resultString;
   };
 
+  const formatDuration = (filmDuration) => dayjs().startOf('day').add(filmDuration, 'minute').format('H[h] mm[m]');
+
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
@@ -51,7 +57,7 @@ const getFilmDetailsPopupTemplate = (data) => {
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="${poster}" alt="">
-          <p class="film-details__age">${ageRestriction}</p>
+          <p class="film-details__age">${ageRestriction}+</p>
         </div>
 
         <div class="film-details__info">
@@ -72,27 +78,26 @@ const getFilmDetailsPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">${screenwriters}</td>
+              <td class="film-details__cell">${screenwriters.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${cast}</td>
+              <td class="film-details__cell">${cast.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${releaseDate.format('D MMMM YYYY')}</td>
+              <td class="film-details__cell">${releaseDate.format('DD MMMM YYYY')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-<!--              TODO -->
-              <td class="film-details__cell">${duration}</td>
+              <td class="film-details__cell">${formatDuration(duration)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
               <td class="film-details__cell">${releaseCountry}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${genres.length > 1 ? 'Genres' : 'Genre'}</td>
               <td class="film-details__cell">${renderGenres(genres)}</td>
             </tr>
           </table>
@@ -120,26 +125,26 @@ const getFilmDetailsPopupTemplate = (data) => {
             ${selectedCommentEmotion ? `<img src="images/emoji/${selectedCommentEmotion}.png" width="55" height="55" alt="emoji-${selectedCommentEmotion}">` : ''}
           </div>
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="${isAdding ? 'Sending...' : 'Select reaction below and write comment here'}" name="comment" ${isAdding ? 'disabled' : ''}></textarea>
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${selectedCommentEmotion === 'smile' ? 'checked' : ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" ${isAdding ? 'disabled' : ''} id="emoji-smile" value="smile" ${selectedCommentEmotion === 'smile' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-smile">
                 <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${selectedCommentEmotion === 'sleeping' ? 'checked' : ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" ${isAdding ? 'disabled' : ''} id="emoji-sleeping" value="sleeping" ${selectedCommentEmotion === 'sleeping' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-sleeping">
                 <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${selectedCommentEmotion === 'puke' ? 'checked' : ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" ${isAdding ? 'disabled' : ''} id="emoji-puke" value="puke" ${selectedCommentEmotion === 'puke' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-puke">
                 <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${selectedCommentEmotion === 'angry' ? 'checked' : ''}>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" ${isAdding ? 'disabled' : ''} id="emoji-angry" value="angry" ${selectedCommentEmotion === 'angry' ? 'checked' : ''}>
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
@@ -244,7 +249,7 @@ export default class FilmDetails extends SmartView {
 
   _deleteCommentClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteCommentButtonClick(parseInt(evt.target.dataset.id, 10));
+    this._callback.deleteCommentButtonClick(evt.target.dataset.id);
   }
 
   setDeleteCommentClickHandler(callback) {
@@ -254,7 +259,7 @@ export default class FilmDetails extends SmartView {
   }
 
   _addCommentClickHandler(evt) {
-    if (evt.key === 'Enter' && evt.ctrlKey) {
+    if (evt.key === 'Enter' && evt.ctrlKey && !this._data.isAdding) {
       evt.preventDefault();
       const newCommentText = this.getElement().querySelector('.film-details__comment-input').value;
       this._callback.addNewCommentButtonClick(this._data.selectedCommentEmotion, newCommentText);
@@ -266,13 +271,48 @@ export default class FilmDetails extends SmartView {
     this.getElement().addEventListener('keydown', this._addCommentClickHandler);
   }
 
+  setCommentDeleting(id, isDeleting) {
+    this.updateData({
+      comments: this._data.comments.map((comment) => {
+        if (comment.id === id) {
+          comment.isDeleting = isDeleting;
+        }
+        return comment;
+      }),
+    });
+  }
+
+  setAddingNewComment(addingStatus) {
+    this.updateData(
+      {
+        isAdding: addingStatus,
+      },
+    );
+  }
+
+  shakeCommentsSection(commentId, callback) {
+    const commentElement = this.getElement().querySelector(`li[data-id="${commentId}"]`);
+    commentElement.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      commentElement.style.animation = '';
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
   static parseToData(film, comments) {
     return Object.assign(
       {},
       film,
       {
         selectedCommentEmotion: null,
-        comments: comments,
+        isAdding: false,
+        comments: comments.map((comment) => Object.assign(
+          {},
+          comment,
+          {
+            isDeleting: false,
+          },
+        )),
       },
     );
   }

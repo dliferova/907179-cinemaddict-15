@@ -170,12 +170,10 @@ export default class FilmCardList {
           });
         break;
       case UserAction.ADD_COMMENT:
-        // TODO вторая часть
-        // this._filmsModel.updateFilm(updateType, update);
+        this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        // TODO вторая часть
-        // this._filmsModel.updateFilm(updateType, update);
+        this._filmsModel.updateFilm(updateType, update);
         break;
     }
   }
