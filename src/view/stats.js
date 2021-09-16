@@ -93,7 +93,8 @@ const createStatisticTemplate = (data) => {
   const {films, period} = data;
 
   const watchedFilms = films.filter((film) => !!film.watchingDate && film.watchingDate.isBefore(period.to) && film.watchingDate.isAfter(period.from));
-  const rank = getRankRating(watchedFilms.length);
+  const filmInHistory = films.filter((film) => film.isAlreadyWatched);
+  const rank = getRankRating(filmInHistory.length);
   const groups = getSortedGenre(watchedFilms);
   const topGenre = groups.length > 0 ? groups[0][0] : null;
 

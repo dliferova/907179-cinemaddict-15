@@ -2,7 +2,6 @@ import {RenderPosition, renderElement, removeElement} from './utils/render.js';
 
 import UserProfileView from './view/user-profile.js';
 import FooterStatisticView from './view/footer-statistics.js';
-import {generateStatisticData} from './mock/footer-statistics-mock.js';
 import FilmCardListPresenter from './presenter/film-card-list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter.js';
