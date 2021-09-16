@@ -15,14 +15,6 @@ const AUTHORIZATION = 'Basic 2xci13mod4x';
 const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
 const api = new Api(END_POINT, AUTHORIZATION);
 
-//** То, как было раньше
-// const FILM_TOTAL = 17;
-//
-// const filmsData = new Array(FILM_TOTAL).fill(null).map(() => generateFilmCard());
-//
-// const filmsModel = new FilmsModel();
-// filmsModel.setFilms(filmsData);
-
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
 
@@ -32,7 +24,7 @@ const siteMainElement = document.querySelector('.main');
 const footerStatisticsSection = document.querySelector('.footer__statistics');
 
 renderElement(siteHeaderElement, new UserProfileView(), RenderPosition.BEFOREEND);
-renderElement(footerStatisticsSection, new FooterStatisticView(generateStatisticData()), RenderPosition.AFTERBEGIN);
+renderElement(footerStatisticsSection, new FooterStatisticView(), RenderPosition.AFTERBEGIN);
 
 const filmCardListPresenter = new FilmCardListPresenter(siteMainElement, body, filmsModel, filterModel, api);
 const statsView = new StatisticSectionView(filmsModel);
@@ -73,10 +65,6 @@ const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsM
 filterPresenter.init();
 
 filmCardListPresenter.init();
-
-// TODO отдельный презентер для статистики
-// const statsPresenter = new StatsPresenter(siteMainElement, body, filmsModel, filterModel);
-// statsPresenter.init();
 
 api.getFilms()
   .then((films) => {

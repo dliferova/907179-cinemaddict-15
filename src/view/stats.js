@@ -1,7 +1,7 @@
 import SmartView from './smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getDatePeriod, getTotalDuration} from '../utils/stats-utils.js';
+import {getDatePeriod, getTotalDuration, getRankRating} from '../utils/stats-utils.js';
 import {StatsFilterType} from '../const.js';
 
 const BAR_HEIGHT = 50;
@@ -93,7 +93,7 @@ const createStatisticTemplate = (data) => {
   const {films, period} = data;
 
   const watchedFilms = films.filter((film) => !!film.watchingDate && film.watchingDate.isBefore(period.to) && film.watchingDate.isAfter(period.from));
-
+  const rank = getRankRating(watchedFilms.length);
   const groups = getSortedGenre(watchedFilms);
   const topGenre = groups.length > 0 ? groups[0][0] : null;
 
@@ -102,7 +102,7 @@ const createStatisticTemplate = (data) => {
   return `<section class="statistic">
     <p class="statistic__rank">Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Movie buff</span>
+      <span class="statistic__rank-label">${rank}</span>
     </p>
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">

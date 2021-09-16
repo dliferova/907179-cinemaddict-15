@@ -37,3 +37,18 @@ export const StatsFilterType = {
   MONTH: 'month',
   YEAR: 'year',
 };
+
+export const Ranks = {
+  NOVICE: {
+    name: 'Novice',
+    minCount: 1,
+  },
+  FAN: {
+    name: 'Fan',
+    minCount: 11,
+  },
+  MOVIE_BUFF: {
+    name: 'Movie Buff',
+    minCount: 21,
+  },
+};

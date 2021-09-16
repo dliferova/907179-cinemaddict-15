@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import {StatsFilterType} from '../const.js';
+import {StatsFilterType, Ranks} from '../const.js';
 
-const minutesToHours = (min) => min ? {hour: Math.floor(min / 60), min: min % 60} : {hour : 0, min : 0};
+const minutesToHours = (min) => min ? {hour: Math.floor(min / 60), min: min % 60} : {hour: 0, min: 0};
 
 export const getTotalDuration = (films) => minutesToHours(films.reduce((acc, film) => acc + film.duration, 0));
 
@@ -22,3 +22,17 @@ export const getDatePeriod = (period) => {
       return {from: dayjs().subtract(MAX_PERIOD_IN_YEARS, StatsFilterType.YEAR).toDate(), to};
   }
 };
+
+export const getRankRating = (count) => {
+  if (count >= Ranks.MOVIE_BUFF.minCount) {
+    return Ranks.MOVIE_BUFF.name;
+  }
+  if (count >= Ranks.FAN.minCount) {
+    return Ranks.FAN.name;
+  }
+  if (count >= Ranks.NOVICE.minCount) {
+    return Ranks.NOVICE.name;
+  }
+  return '';
+};
+
