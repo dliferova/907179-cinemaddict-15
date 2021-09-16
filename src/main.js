@@ -23,7 +23,7 @@ const siteMainElement = document.querySelector('.main');
 const footerStatisticsSection = document.querySelector('.footer__statistics');
 
 renderElement(siteHeaderElement, new UserProfileView(filmsModel), RenderPosition.BEFOREEND);
-renderElement(footerStatisticsSection, new FooterStatisticView(), RenderPosition.AFTERBEGIN);
+renderElement(footerStatisticsSection, new FooterStatisticView(filmsModel), RenderPosition.AFTERBEGIN);
 
 const filmCardListPresenter = new FilmCardListPresenter(siteMainElement, body, filmsModel, filterModel, api);
 const statsView = new StatisticSectionView(filmsModel);

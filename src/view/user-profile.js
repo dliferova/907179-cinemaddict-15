@@ -18,13 +18,15 @@ export default class UserProfile extends SmartView {
   constructor(filmsModel) {
     super();
     this._filmsModel = filmsModel;
-    this._data = UserProfile.parseToData(filmsModel.getFilms(), getRankRating(1));
+    this._data = UserProfile.parseToData(filmsModel.getFilms(), getRankRating());
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    this._renderRank();
+    this.updateData({
+      rank: getRankRating(this.watchedFilms.length),
+    });
   }
 
   getTemplate() {
@@ -37,15 +39,12 @@ export default class UserProfile extends SmartView {
   _handleModelEvent() {
     this.updateData({
       films: this._filmsModel.getFilms(),
+      rank: getRankRating(this.watchedFilms.length),
     });
-    this._renderRank();
   }
 
-  _renderRank() {
-    const watchedFilms = filter[FilterType.HISTORY](this._filmsModel.getFilms()).length;
-    this.updateData({
-      rank: getRankRating(watchedFilms),
-    });
+  get watchedFilms() {
+    return filter[FilterType.HISTORY](this._filmsModel.getFilms());
   }
 
   static parseToData(films, rank) {
