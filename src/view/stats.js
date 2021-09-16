@@ -154,6 +154,7 @@ export default class Statistic extends SmartView {
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._setInnerHandlers();
+    this._inputValue = StatsFilterType.ALL_TIME;
   }
 
   init() {
@@ -174,12 +175,23 @@ export default class Statistic extends SmartView {
     }
   }
 
-  _statFilterClickHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      period: getDatePeriod(evt.target.value),
-    });
-    this._renderChart();
+  _checkFilterPeriod() {
+    this.getElement().querySelector('.statistic__filters')
+      .querySelectorAll('input').forEach((input) => {
+        input.checked = input.value === this._inputValue;});
+  }
+
+  _statFilterClickHandler() {
+    this.getElement().querySelector('.statistic__filters')
+      .addEventListener('change', (evt) => {
+        evt.preventDefault();
+        this._inputValue = evt.target.value;
+        this.updateData({
+          period: getDatePeriod(this._inputValue),
+        });
+        this._checkFilterPeriod();
+        this._renderChart();
+      });
   }
 
   _handleModelEvent() {
