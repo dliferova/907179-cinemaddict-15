@@ -33,6 +33,6 @@ export const getRankRating = (count) => {
   if (count >= Ranks.NOVICE.minCount) {
     return Ranks.NOVICE.name;
   }
-  return '';
+  return null;
 };
 
