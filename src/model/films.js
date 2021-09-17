@@ -79,7 +79,7 @@ export default class Films extends AbstractObserver {
         'actors': film.cast,
         'release': {
           'date': film.releaseDate,
-          'release_country': film.country,
+          'release_country': film.releaseCountry,
         },
         'runtime': film.duration,
         'genre': film.genres,
