@@ -50,6 +50,7 @@ export default class FilmCardList {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this.retainPopupScrollPosition = this.retainPopupScrollPosition.bind(this);
   }
 
   destroy() {
@@ -161,6 +162,11 @@ export default class FilmCardList {
     this._openedPopupId = null;
   }
 
+  retainPopupScrollPosition() {
+    if (this._mainContainer.querySelector('.film-details')) {
+      this._mainContainer.querySelector('.film-details').scrollTop = this._mainContainer.querySelector('.film-details').scrollHeight;
+    }
+  }
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
@@ -169,12 +175,15 @@ export default class FilmCardList {
           .then((response) => {
             this._filmsModel.updateFilm(updateType, response);
           });
+        this.retainPopupScrollPosition();
         break;
       case UserAction.ADD_COMMENT:
         this._filmsModel.updateFilm(updateType, update);
+        this.retainPopupScrollPosition();
         break;
       case UserAction.DELETE_COMMENT:
         this._filmsModel.updateFilm(updateType, update);
+        this.retainPopupScrollPosition();
         break;
     }
   }
