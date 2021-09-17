@@ -54,7 +54,7 @@ export default class Films extends AbstractObserver {
         isAddedToWatchList: film['user_details']['watchlist'],
         isAlreadyWatched: film['user_details']['already_watched'],
         isFavorite: film['user_details']['favorite'],
-        watchingDate: film['user_details']['watching_date'],
+        watchingDate: dayjs(film['user_details']['watching_date']),
       },
     );
 

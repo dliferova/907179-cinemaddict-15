@@ -2,7 +2,6 @@ import {RenderPosition, renderElement, removeElement} from './utils/render.js';
 
 import UserProfileView from './view/user-profile.js';
 import FooterStatisticView from './view/footer-statistics.js';
-import {generateStatisticData} from './mock/footer-statistics-mock.js';
 import FilmCardListPresenter from './presenter/film-card-list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter.js';
@@ -15,14 +14,6 @@ const AUTHORIZATION = 'Basic 2xci13mod4x';
 const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
 const api = new Api(END_POINT, AUTHORIZATION);
 
-//** То, как было раньше
-// const FILM_TOTAL = 17;
-//
-// const filmsData = new Array(FILM_TOTAL).fill(null).map(() => generateFilmCard());
-//
-// const filmsModel = new FilmsModel();
-// filmsModel.setFilms(filmsData);
-
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
 
@@ -31,11 +22,11 @@ const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStatisticsSection = document.querySelector('.footer__statistics');
 
-renderElement(siteHeaderElement, new UserProfileView(), RenderPosition.BEFOREEND);
-renderElement(footerStatisticsSection, new FooterStatisticView(generateStatisticData()), RenderPosition.AFTERBEGIN);
+renderElement(siteHeaderElement, new UserProfileView(filmsModel), RenderPosition.BEFOREEND);
+renderElement(footerStatisticsSection, new FooterStatisticView(filmsModel), RenderPosition.AFTERBEGIN);
 
 const filmCardListPresenter = new FilmCardListPresenter(siteMainElement, body, filmsModel, filterModel, api);
-const statsView = new StatisticSectionView();
+const statsView = new StatisticSectionView(filmsModel);
 
 const showFilms = () => {
   removeElement(statsView);
@@ -44,6 +35,7 @@ const showFilms = () => {
 
 const showStats = () => {
   filmCardListPresenter.destroy();
+  statsView.init();
   renderElement(siteMainElement, statsView, RenderPosition.BEFOREEND);
 };
 
@@ -72,10 +64,6 @@ const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsM
 filterPresenter.init();
 
 filmCardListPresenter.init();
-
-// TODO отдельный презентер для статистики
-// const statsPresenter = new StatsPresenter(siteMainElement, body, filmsModel, filterModel);
-// statsPresenter.init();
 
 api.getFilms()
   .then((films) => {

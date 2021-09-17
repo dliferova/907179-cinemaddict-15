@@ -29,3 +29,26 @@ export const MenuItem = {
   FILMS: 'FILMS',
   STATISTICS: 'STATISTICS',
 };
+
+export const StatsFilterType = {
+  ALL_TIME: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
+export const Ranks = {
+  NOVICE: {
+    name: 'Novice',
+    minCount: 1,
+  },
+  FAN: {
+    name: 'Fan',
+    minCount: 11,
+  },
+  MOVIE_BUFF: {
+    name: 'Movie Buff',
+    minCount: 21,
+  },
+};

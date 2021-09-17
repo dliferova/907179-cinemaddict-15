@@ -1,16 +1,30 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 
-const createStatisticsTemplate = (statistics) => (
-  `<p class="footer__statistics-counter">${statistics.totalMoviesCount} movies inside</p>
-`);
+const createStatisticsTemplate = (data) => (
+  `<p class="footer__statistics-counter">${data.films ? `${data.films.length} movies inside` : 'Loading films...'}</p>`
+);
 
-export default class FooterStatistic extends AbstractView {
-  constructor(statistics) {
+export default class FooterStatistic extends SmartView {
+  constructor(filmsModel) {
     super();
-    this._statistics = statistics;
+    this._filmsModel = filmsModel;
+    this._data = {
+      films: null,
+    };
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._statistics);
+    return createStatisticsTemplate(this._data);
+  }
+
+  restoreHandlers() {
+  }
+
+  _handleModelEvent() {
+    this.updateData({
+      films: this._filmsModel.getFilms(),
+    });
   }
 }
