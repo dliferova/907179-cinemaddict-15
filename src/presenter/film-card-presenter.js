@@ -2,6 +2,7 @@ import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/popup-view';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
 import {UpdateType, UserAction} from '../const.js';
+import dayjs from 'dayjs';
 
 export default class FilmCard {
   constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose, api) {
@@ -124,6 +125,7 @@ export default class FilmCard {
         this._film,
         {
           isAlreadyWatched: !this._film.isAlreadyWatched,
+          watchingDate: !this._film.isAlreadyWatched ? dayjs() : null,
         },
       ),
     );
