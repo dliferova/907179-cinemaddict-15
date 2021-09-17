@@ -35,7 +35,7 @@ export default class FilmCardList {
     this._topRatedListComponent = new FilmListView(TOP_RATED_LIST_TITLE, true);
     this._mostCommentedListComponent = new FilmListView(MOST_COMMENTED_LIST_TITLE, true);
     this._emptyListComponent = new EmptyListView();
-    this._sortComponent = new SortView();
+    this._sortComponent = null;
 
     this._filmCardPresenters = new Map();
     this._topRatedListPresenters = new Map();
@@ -65,6 +65,7 @@ export default class FilmCardList {
   init() {
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+    this._sortComponent = new SortView(this._currentSortType);
     this._renderFilms();
   }
 
