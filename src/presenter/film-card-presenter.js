@@ -3,6 +3,7 @@ import FilmDetailsView from '../view/popup-view';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
 import {UpdateType, UserAction} from '../const.js';
 import dayjs from 'dayjs';
+import he from 'he';
 
 export default class FilmCard {
   constructor(filmCardListContainer, mainContainer, bodyContainer, changeData, onPopupOpen, onPopupClose, api) {
@@ -185,7 +186,7 @@ export default class FilmCard {
     if (this._mainContainer.contains(this._filmDetailsComponent.getElement())) {
       this._filmDetailsComponent.setAddingNewComment(true);
       this._api.addComment(this._film.id, {
-        comment: newCommentText,
+        comment: he.escape(newCommentText),
         emotion: selectedCommentEmotion,
       }).then((filmAndComments) => {
         this._comments = filmAndComments.comments.slice();
