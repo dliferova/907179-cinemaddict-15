@@ -1,5 +1,5 @@
 import SmartView from './smart.js';
-import {createCommentElement} from './comment-view.js';
+import {createCommentElement} from './comment.js';
 import dayjs from 'dayjs';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;

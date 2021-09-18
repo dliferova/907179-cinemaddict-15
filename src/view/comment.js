@@ -19,7 +19,7 @@ export const createCommentElement = (comment) => {
     </li>`;
 };
 
-export default class CommentView extends AbstractView {
+export default class Comment extends AbstractView {
   constructor(comment) {
     super();
     this._comment = comment;

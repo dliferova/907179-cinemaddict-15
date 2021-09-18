@@ -6,7 +6,7 @@ import FilmCardPresenter from './film-card-presenter.js';
 import {UpdateType, UserAction, SortType, FilterType} from '../const.js';
 import {filter} from '../utils/filter.js';
 import EmptyListView from '../view/film-list-empty.js';
-import SortView from '../view/sort-view.js';
+import Sort from '../view/sort.js';
 import {sortByDate, sortByRating} from '../utils/sort.js';
 import LoadingView from '../view/loading.js';
 
@@ -280,7 +280,7 @@ export default class FilmCardList {
       this._sortComponent = null;
     }
 
-    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent = new Sort(this._currentSortType);
     renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }

@@ -1,5 +1,5 @@
 import FilmCardView from '../view/film-card';
-import FilmDetailsView from '../view/popup-view';
+import FilmDetailsView from '../view/popup';
 import {RenderPosition, renderElement, replaceElement, removeElement} from '../utils/render.js';
 import {UpdateType, UserAction} from '../const.js';
 import dayjs from 'dayjs';
