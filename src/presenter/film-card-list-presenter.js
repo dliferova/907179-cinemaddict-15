@@ -271,7 +271,7 @@ export default class FilmCardList {
       return;
     }
     this._currentSortType = sortType;
-    this._clearFilmList();
+    this._clearFilmList({resetRenderFilmCount: true});
     this._renderFilms();
   }
 
