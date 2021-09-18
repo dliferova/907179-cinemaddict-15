@@ -25,6 +25,7 @@ export default class FilmCard {
     this._onCommentDeleteCLick = this._onCommentDeleteCLick.bind(this);
     this._onSubmitCommentHandler = this._onSubmitCommentHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._retainPopupScrollPosition = this._retainPopupScrollPosition.bind(this);
   }
 
   init(film) {
@@ -69,10 +70,17 @@ export default class FilmCard {
     this._filmDetailsComponent.setFavoriteClickHandler(this._onFavoriteClick);
     this._filmDetailsComponent.setDeleteCommentClickHandler(this._onCommentDeleteCLick);
     this._filmDetailsComponent.setAddCommentClickHandler(this._onSubmitCommentHandler);
+
   }
 
   destroy() {
     removeElement(this._filmCardComponent);
+  }
+
+  _retainPopupScrollPosition() {
+    if (this._mainContainer.querySelector('.film-details')) {
+      this._mainContainer.querySelector('.film-details').scrollTop = this._mainContainer.querySelector('.film-details').scrollHeight;
+    }
   }
 
   _openFilmDetailPopup() {
@@ -112,7 +120,7 @@ export default class FilmCard {
   }
 
   _onAddToWatchClick() {
-    const updateType = !this._film.isAddedToWatchList ? UpdateType.PATCH : UpdateType.MINOR;
+    const updateType = UpdateType.PATCH;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
       updateType,
@@ -124,10 +132,11 @@ export default class FilmCard {
         },
       ),
     );
+    this._retainPopupScrollPosition();
   }
 
   _onAlreadyWatchedClick() {
-    const updateType = !this._film.isAlreadyWatched ? UpdateType.PATCH : UpdateType.MINOR;
+    const updateType = UpdateType.PATCH;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
       updateType,
@@ -140,10 +149,11 @@ export default class FilmCard {
         },
       ),
     );
+    this._retainPopupScrollPosition();
   }
 
   _onFavoriteClick() {
-    const updateType = !this._film.isFavorite ? UpdateType.PATCH : UpdateType.MINOR;
+    const updateType = UpdateType.PATCH;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
       updateType,
@@ -155,6 +165,7 @@ export default class FilmCard {
         },
       ),
     );
+    this._retainPopupScrollPosition();
   }
 
   _onCommentDeleteCLick(id) {
