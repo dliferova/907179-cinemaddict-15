@@ -66,7 +66,6 @@ export default class FilmCardList {
   init() {
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
-    this._sortComponent = new SortView(this._currentSortType);
     this._renderFilms();
   }
 
@@ -231,6 +230,7 @@ export default class FilmCardList {
 
     removeElement(this._showMoreButtonComponent);
     removeElement(this._loadingComponent);
+    removeElement(this._sortComponent);
 
     if (this._emptyListComponent) {
       removeElement(this._emptyListComponent);
@@ -276,10 +276,13 @@ export default class FilmCardList {
   }
 
   _renderSort() {
-    if (!this._mainContainer.contains(this._sortComponent.getElement())) {
-      renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
-      this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
     }
+
+    this._sortComponent = new SortView(this._currentSortType);
+    renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderTopRatedFilmList() {
