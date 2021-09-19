@@ -168,7 +168,6 @@ export default class FilmDetails extends SmartView {
     this._deleteCommentClickHandler = this._deleteCommentClickHandler.bind(this);
     this._addCommentClickHandler = this._addCommentClickHandler.bind(this);
     this._setInnerHandlers();
-    this._checkedEmotion = null;
   }
 
   getTemplate() {
