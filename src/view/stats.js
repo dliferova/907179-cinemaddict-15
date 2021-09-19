@@ -198,6 +198,7 @@ export default class Statistic extends SmartView {
   _handleModelEvent() {
     this.updateData({
       films: this._filmsModel.getFilms(),
+      period: getDatePeriod(this._inputValue),
     });
     this._renderChart();
   }

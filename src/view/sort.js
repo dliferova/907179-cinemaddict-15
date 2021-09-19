@@ -9,7 +9,7 @@ const createSortTemplate = (currentSortType) => (
   </ul>`
 );
 
-export default class SortView extends AbstractView {
+export default class Sort extends AbstractView {
   constructor(currentSortType) {
     super();
     this._currentSortType = currentSortType;
@@ -24,7 +24,6 @@ export default class SortView extends AbstractView {
     if (evt.target.tagName !== 'A') {
       return;
     }
-
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }

@@ -1,3 +1,9 @@
+import Api from './api.js';
+
+export const AUTHORIZATION = 'Basic 2xci13mod4x';
+export const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
+export const api = new Api(END_POINT, AUTHORIZATION);
+
 export const SortType = {
   SORT_BY_DEFAULT: 'default',
   SORT_BY_DATE: 'sort-data',
