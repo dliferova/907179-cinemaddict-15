@@ -1,4 +1,5 @@
 import AbstractView from './abstract.js';
+import he from 'he';
 
 export const createCommentElement = (comment) => {
   const {emotion, commentMessage, author, date, id, isDeleting} = comment;
@@ -8,7 +9,7 @@ export const createCommentElement = (comment) => {
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
     <div>
-        <p class="film-details__comment-text">${commentMessage}</p>
+        <p class="film-details__comment-text">${he.escape(commentMessage)}</p>
         <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${date.fromNow()}</span>
@@ -18,7 +19,7 @@ export const createCommentElement = (comment) => {
     </li>`;
 };
 
-export default class CommentView extends AbstractView {
+export default class Comment extends AbstractView {
   constructor(comment) {
     super();
     this._comment = comment;

@@ -1,18 +1,13 @@
 import {RenderPosition, renderElement, removeElement} from './utils/render.js';
 
+import {FilterType, MenuItem, UpdateType, api} from './const.js';
 import UserProfileView from './view/user-profile.js';
 import FooterStatisticView from './view/footer-statistics.js';
 import FilmCardListPresenter from './presenter/film-card-list-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter.js';
 import FilmsModel from './model/films.js';
-import {FilterType, MenuItem, UpdateType} from './const.js';
 import StatisticSectionView from './view/stats.js';
-import Api from './api.js';
-
-const AUTHORIZATION = 'Basic 2xci13mod4x';
-const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
-const api = new Api(END_POINT, AUTHORIZATION);
 
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
