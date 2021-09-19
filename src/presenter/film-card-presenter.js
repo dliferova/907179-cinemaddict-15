@@ -98,6 +98,7 @@ export default class FilmCard {
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this._onPopupClose();
       this._mainContainer.removeChild(this._filmDetailsComponent.getElement());
       this._bodyContainer.classList.remove('hide-overflow');
       document.removeEventListener('keydown', this._escKeyDownHandler);
