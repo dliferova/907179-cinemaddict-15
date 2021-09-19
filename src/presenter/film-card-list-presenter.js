@@ -87,7 +87,7 @@ export default class FilmCardList {
   }
 
   _renderFilmList() {
-    renderElement(this._mainContainer, this._filmsSectionComponent, RenderPosition.BEFOREEND);
+    this._renderInMainContainer(this._filmsSectionComponent);
     renderElement(this._filmsSectionComponent, this._filmListComponent, RenderPosition.BEFOREEND);
     const container = this._filmListComponent.getFilmsContainer();
 
@@ -174,7 +174,6 @@ export default class FilmCardList {
           .then((response) => {
             this._filmsModel.updateFilm(updateType, response);
           });
-        this._retainPopupScrollPosition();
         break;
       case UserAction.ADD_COMMENT:
         this._filmsModel.updateFilm(updateType, update);
@@ -203,10 +202,12 @@ export default class FilmCardList {
       case UpdateType.MINOR:
         this._clearFilmList();
         this._renderFilms();
+        this._renderFilmDetailsPopup();
         break;
       case UpdateType.MAJOR:
         this._clearFilmList({resetRenderFilmCount: true, resetSortType: true});
         this._renderFilms();
+        this._renderFilmDetailsPopup();
         break;
       case UpdateType.INIT:
         this._isLoading = false;
@@ -214,6 +215,14 @@ export default class FilmCardList {
         this._renderFilms();
         break;
     }
+  }
+
+  _renderFilmDetailsPopup() {
+    if (!this._openedPopupId) {
+      return;
+    }
+    const presenter = this._filmCardPresenters.get(this._openedPopupId);
+    presenter.openFilmDetailPopup();
   }
 
   _clearMapPresenter(mapPresenter) {
@@ -281,7 +290,7 @@ export default class FilmCardList {
     }
 
     this._sortComponent = new Sort(this._currentSortType);
-    renderElement(this._mainContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    this._renderInMainContainer(this._sortComponent);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
@@ -304,6 +313,17 @@ export default class FilmCardList {
   }
 
   _renderLoading() {
-    renderElement(this._mainContainer, this._loadingComponent, RenderPosition.BEFOREEND);
+    this._renderInMainContainer(this._loadingComponent);
+  }
+
+  _renderInMainContainer(component) {
+    const filmDetailPopupElement = this._mainContainer.querySelector('.film-details');
+    if (filmDetailPopupElement) {
+      filmDetailPopupElement.remove();
+      renderElement(this._mainContainer, component, RenderPosition.BEFOREEND);
+      renderElement(this._mainContainer, filmDetailPopupElement, RenderPosition.BEFOREEND);
+    } else {
+      renderElement(this._mainContainer, component, RenderPosition.BEFOREEND);
+    }
   }
 }

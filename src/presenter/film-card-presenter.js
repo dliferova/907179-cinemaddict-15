@@ -17,7 +17,7 @@ export default class FilmCard {
     this._filmDetailsComponent = null;
     this._comments = [];
 
-    this._openFilmDetailPopup = this._openFilmDetailPopup.bind(this);
+    this.openFilmDetailPopup = this.openFilmDetailPopup.bind(this);
     this.closeFilmDetailPopup = this.closeFilmDetailPopup.bind(this);
     this._onAddToWatchClick = this._onAddToWatchClick.bind(this);
     this._onAlreadyWatchedClick = this._onAlreadyWatchedClick.bind(this);
@@ -25,7 +25,6 @@ export default class FilmCard {
     this._onCommentDeleteCLick = this._onCommentDeleteCLick.bind(this);
     this._onSubmitCommentHandler = this._onSubmitCommentHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._retainPopupScrollPosition = this._retainPopupScrollPosition.bind(this);
   }
 
   init(film) {
@@ -37,9 +36,9 @@ export default class FilmCard {
     this._filmCardComponent = new FilmCardView(film);
     this._initFilmDetailsComponent();
 
-    this._filmCardComponent.setTitleClickHandler(this._openFilmDetailPopup);
-    this._filmCardComponent.setPosterClickHandler(this._openFilmDetailPopup);
-    this._filmCardComponent.setCommentsClickHandler(this._openFilmDetailPopup);
+    this._filmCardComponent.setTitleClickHandler(this.openFilmDetailPopup);
+    this._filmCardComponent.setPosterClickHandler(this.openFilmDetailPopup);
+    this._filmCardComponent.setCommentsClickHandler(this.openFilmDetailPopup);
     this._filmCardComponent.setAddToWatchListClickHandler(this._onAddToWatchClick);
     this._filmCardComponent.setWatchedClickHandler(this._onAlreadyWatchedClick);
     this._filmCardComponent.setFavoriteClickHandler(this._onFavoriteClick);
@@ -75,22 +74,17 @@ export default class FilmCard {
 
   destroy() {
     removeElement(this._filmCardComponent);
+    removeElement(this._filmDetailsComponent);
   }
 
-  _retainPopupScrollPosition() {
-    if (this._mainContainer.querySelector('.film-details')) {
-      this._mainContainer.querySelector('.film-details').scrollTop = this._mainContainer.querySelector('.film-details').scrollHeight;
-    }
-  }
-
-  _openFilmDetailPopup() {
+  openFilmDetailPopup() {
     document.addEventListener('keydown', this._escKeyDownHandler);
     this._onPopupOpen();
     const show = (comments) => {
       this._comments = comments.slice();
       this._initFilmDetailsComponent();
       this._mainContainer.appendChild(this._filmDetailsComponent.getElement());
-      this._bodyContainer.classList.toggle('hide-overflow');
+      this._bodyContainer.classList.add('hide-overflow');
     };
     this._api.getComments(this._film.id)
       .then((comments) => {
@@ -105,7 +99,7 @@ export default class FilmCard {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this._mainContainer.removeChild(this._filmDetailsComponent.getElement());
-      this._bodyContainer.classList.toggle('hide-overflow');
+      this._bodyContainer.classList.remove('hide-overflow');
       document.removeEventListener('keydown', this._escKeyDownHandler);
     }
   }
@@ -116,11 +110,11 @@ export default class FilmCard {
     }
     this._onPopupClose();
     this._mainContainer.removeChild(this._filmDetailsComponent.getElement());
-    this._bodyContainer.classList.toggle('hide-overflow');
+    this._bodyContainer.classList.remove('hide-overflow');
   }
 
   _onAddToWatchClick() {
-    const updateType = UpdateType.PATCH;
+    const updateType = !this._film.isAddedToWatchList ? UpdateType.PATCH : UpdateType.MINOR;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
       updateType,
@@ -132,11 +126,10 @@ export default class FilmCard {
         },
       ),
     );
-    this._retainPopupScrollPosition();
   }
 
   _onAlreadyWatchedClick() {
-    const updateType = UpdateType.PATCH;
+    const updateType = !this._film.isAlreadyWatched ? UpdateType.PATCH : UpdateType.MINOR;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
       updateType,
@@ -149,11 +142,10 @@ export default class FilmCard {
         },
       ),
     );
-    this._retainPopupScrollPosition();
   }
 
   _onFavoriteClick() {
-    const updateType = UpdateType.PATCH;
+    const updateType = !this._film.isFavorite ? UpdateType.PATCH : UpdateType.MINOR;
     this._changeData(
       UserAction.UPDATE_FILM_CARD,
       updateType,
@@ -165,7 +157,6 @@ export default class FilmCard {
         },
       ),
     );
-    this._retainPopupScrollPosition();
   }
 
   _onCommentDeleteCLick(id) {
